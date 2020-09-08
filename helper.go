@@ -53,12 +53,13 @@ func AutoGetCurrentThreadEnv() Env {
 	return Env(unsafe.Pointer(C.go_seq_get_thread_env()))
 }
 
-func PushLocalFrame(nArgs int) {
+func PushLocalFrame(nArgs int) Env {
 	env := AutoGetCurrentThreadEnv()
 	frameSize := 2*nArgs + 10
 	if env.PushLocalFrame(frameSize) < 0 {
 		log.Fatal("PushLocalFrame failed")
 	}
+	return env
 }
 
 func PopLocalFrame(env Env) {
