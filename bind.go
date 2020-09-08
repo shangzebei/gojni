@@ -1,589 +1,589 @@
 package jni
 
-//
-// #include <jni.h>
-// #include <stdlib.h>
-//
-// static inline jint AttachCurrentThread(JavaVM *vm, JNIEnv **p_env) {
-//     return (*vm)->AttachCurrentThread(vm, (void **) p_env, NULL);
-// }
-//
-// static inline jint AttachCurrentThreadAsDaemon(JavaVM *vm, JNIEnv **p_env) {
-//     return (*vm)->AttachCurrentThreadAsDaemon(vm, (void **) p_env, NULL);
-// }
-//
-// static inline jint GetEnv(JavaVM *vm, JNIEnv **penv, jint version) {
-//     return (*vm)->GetEnv(vm, (void **) penv, version);
-// }
-//
-// static inline jint GetJavaVM(JNIEnv * env, JavaVM **vm) {
-//     return (*env)->GetJavaVM(env, vm);
-// }
-//
-// static inline int GetObjectRefType(JNIEnv * env, jobject obj) {
-//     return (int) (*env)->GetObjectRefType(env, obj);
-// }
-//
-// static inline jint DestroyJavaVM(JavaVM * vm) {
-//     return (*vm)->DestroyJavaVM(vm);
-// }
-//
-// static inline jint DetachCurrentThread(JavaVM * vm) {
-//     return (*vm)->DetachCurrentThread(vm);
-// }
-//
-// static inline jclass FindClass(JNIEnv * env, char * name) {
-//     return (*env)->FindClass(env, name);
-// }
-//
-// static inline jint GetVersion(JNIEnv * env) {
-//     return (*env)->GetVersion(env);
-// }
-//
-// static inline jmethodID FromReflectedMethod(JNIEnv * env, jobject method) {
-//     return (*env)->FromReflectedMethod(env, method);
-// }
-//
-// static inline jfieldID FromReflectedField(JNIEnv * env, jobject field) {
-//     return (*env)->FromReflectedField(env, field);
-// }
-//
-// static inline jobject ToReflectedMethod(JNIEnv * env, jclass cls, jmethodID methodID, jboolean isStatic) {
-//     return (*env)->ToReflectedMethod(env, cls, methodID, isStatic);
-// }
-//
-// static inline jclass GetSuperclass(JNIEnv * env, jclass sub) {
-//     return (*env)->GetSuperclass(env, sub);
-// }
-//
-// static inline jboolean IsAssignableFrom(JNIEnv * env, jclass sub, jclass sup) {
-//     return (*env)->IsAssignableFrom(env, sub, sup);
-// }
-//
-// static inline jobject ToReflectedField(JNIEnv * env, jclass cls, jfieldID fieldID, jboolean isStatic) {
-//     return (*env)->ToReflectedField(env, cls, fieldID, isStatic);
-// }
-//
-// static inline jint Throw(JNIEnv * env, jthrowable obj) {
-//     return (*env)->Throw(env, obj);
-// }
-//
-// static inline jint ThrowNew(JNIEnv * env, jclass clazz, char * msg) {
-//     return (*env)->ThrowNew(env, clazz, msg);
-// }
-//
-// static inline jthrowable ExceptionOccurred(JNIEnv * env) {
-//     return (*env)->ExceptionOccurred(env);
-// }
-//
-// static inline void ExceptionDescribe(JNIEnv * env) {
-//     (*env)->ExceptionDescribe(env);
-// }
-//
-// static inline void ExceptionClear(JNIEnv * env) {
-//     (*env)->ExceptionClear(env);
-// }
-//
-// static inline void FatalError(JNIEnv * env, char * msg) {
-//     (*env)->FatalError(env, msg);
-// }
-//
-// static inline jint PushLocalFrame(JNIEnv * env, jint capacity) {
-//     return (*env)->PushLocalFrame(env, capacity);
-// }
-//
-// static inline jobject PopLocalFrame(JNIEnv * env, jobject result) {
-//     return (*env)->PopLocalFrame(env, result);
-// }
-//
-// static inline jobject NewGlobalRef(JNIEnv * env, jobject lobj) {
-//     return (*env)->NewGlobalRef(env, lobj);
-// }
-//
-// static inline void DeleteGlobalRef(JNIEnv * env, jobject gref) {
-//     (*env)->DeleteGlobalRef(env, gref);
-// }
-//
-// static inline void DeleteLocalRef(JNIEnv * env, jobject obj) {
-//     (*env)->DeleteLocalRef(env, obj);
-// }
-//
-// static inline jboolean IsSameObject(JNIEnv * env, jobject obj1, jobject obj2) {
-//     return (*env)->IsSameObject(env, obj1, obj2);
-// }
-//
-// static inline jobject NewLocalRef(JNIEnv * env, jobject ref) {
-//     return (*env)->NewLocalRef(env, ref);
-// }
-//
-// static inline jint EnsureLocalCapacity(JNIEnv * env, jint capacity) {
-//     return (*env)->EnsureLocalCapacity(env, capacity);
-// }
-//
-// static inline jobject AllocObject(JNIEnv * env, jclass clazz) {
-//     return (*env)->AllocObject(env, clazz);
-// }
-//
-// static inline jobject NewObjectA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->NewObjectA(env, clazz, methodID, args);
-// }
-//
-// static inline jclass GetObjectClass(JNIEnv * env, jobject obj) {
-//     return (*env)->GetObjectClass(env, obj);
-// }
-//
-// static inline jboolean IsInstanceOf(JNIEnv * env, jobject obj, jclass clazz) {
-//     return (*env)->IsInstanceOf(env, obj, clazz);
-// }
-//
-// static inline jmethodID GetMethodID(JNIEnv * env, jclass clazz, char * name, char * sig) {
-//     return (*env)->GetMethodID(env, clazz, name, sig);
-// }
-//
-// static inline jobject CallObjectMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallObjectMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jboolean CallBooleanMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallBooleanMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jbyte CallByteMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallByteMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jchar CallCharMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallCharMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jshort CallShortMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallShortMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jint CallIntMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallIntMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jlong CallLongMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallLongMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jfloat CallFloatMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallFloatMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jdouble CallDoubleMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallDoubleMethodA(env, obj, methodID, args);
-// }
-//
-// static inline void CallVoidMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
-//     (*env)->CallVoidMethodA(env, obj, methodID, args);
-// }
-//
-// static inline jobject CallNonvirtualObjectMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualObjectMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jboolean CallNonvirtualBooleanMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualBooleanMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jbyte CallNonvirtualByteMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualByteMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jchar CallNonvirtualCharMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualCharMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jshort CallNonvirtualShortMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualShortMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jint CallNonvirtualIntMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualIntMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jlong CallNonvirtualLongMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualLongMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jfloat CallNonvirtualFloatMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualFloatMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jdouble CallNonvirtualDoubleMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallNonvirtualDoubleMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline void CallNonvirtualVoidMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
-//     (*env)->CallNonvirtualVoidMethodA(env, obj, clazz, methodID, args);
-// }
-//
-// static inline jfieldID GetFieldID(JNIEnv * env, jclass clazz, char * name, char * sig) {
-//     return (*env)->GetFieldID(env, clazz, name, sig);
-// }
-//
-// static inline jobject GetObjectField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetObjectField(env, obj, fieldID);
-// }
-//
-// static inline jboolean GetBooleanField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetBooleanField(env, obj, fieldID);
-// }
-//
-// static inline jbyte GetByteField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetByteField(env, obj, fieldID);
-// }
-//
-// static inline jchar GetCharField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetCharField(env, obj, fieldID);
-// }
-//
-// static inline jshort GetShortField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetShortField(env, obj, fieldID);
-// }
-//
-// static inline jint GetIntField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetIntField(env, obj, fieldID);
-// }
-//
-// static inline jlong GetLongField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetLongField(env, obj, fieldID);
-// }
-//
-// static inline jfloat GetFloatField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetFloatField(env, obj, fieldID);
-// }
-//
-// static inline jdouble GetDoubleField(JNIEnv * env, jobject obj, jfieldID fieldID) {
-//     return (*env)->GetDoubleField(env, obj, fieldID);
-// }
-//
-// static inline void SetObjectField(JNIEnv * env, jobject obj, jfieldID fieldID, jobject val) {
-//     (*env)->SetObjectField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetBooleanField(JNIEnv * env, jobject obj, jfieldID fieldID, jboolean val) {
-//     (*env)->SetBooleanField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetByteField(JNIEnv * env, jobject obj, jfieldID fieldID, jbyte val) {
-//     (*env)->SetByteField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetCharField(JNIEnv * env, jobject obj, jfieldID fieldID, jchar val) {
-//     (*env)->SetCharField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetShortField(JNIEnv * env, jobject obj, jfieldID fieldID, jshort val) {
-//     (*env)->SetShortField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetIntField(JNIEnv * env, jobject obj, jfieldID fieldID, jint val) {
-//     (*env)->SetIntField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetLongField(JNIEnv * env, jobject obj, jfieldID fieldID, jlong val) {
-//     (*env)->SetLongField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetFloatField(JNIEnv * env, jobject obj, jfieldID fieldID, jfloat val) {
-//     (*env)->SetFloatField(env, obj, fieldID, val);
-// }
-//
-// static inline void SetDoubleField(JNIEnv * env, jobject obj, jfieldID fieldID, jdouble val) {
-//     (*env)->SetDoubleField(env, obj, fieldID, val);
-// }
-//
-// static inline jmethodID GetStaticMethodID(JNIEnv * env, jclass clazz, char * name, char * sig) {
-//     return (*env)->GetStaticMethodID(env, clazz, name, sig);
-// }
-//
-// static inline jobject CallStaticObjectMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticObjectMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jboolean CallStaticBooleanMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticBooleanMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jbyte CallStaticByteMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticByteMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jchar CallStaticCharMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticCharMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jshort CallStaticShortMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticShortMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jint CallStaticIntMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticIntMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jlong CallStaticLongMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticLongMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jfloat CallStaticFloatMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticFloatMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline jdouble CallStaticDoubleMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
-//     return (*env)->CallStaticDoubleMethodA(env, clazz, methodID, args);
-// }
-//
-// static inline void CallStaticVoidMethodA(JNIEnv * env, jclass cls, jmethodID methodID, jvalue * args) {
-//     (*env)->CallStaticVoidMethodA(env, cls, methodID, args);
-// }
-//
-// static inline jfieldID GetStaticFieldID(JNIEnv * env, jclass clazz, char * name, char * sig) {
-//     return (*env)->GetStaticFieldID(env, clazz, name, sig);
-// }
-//
-// static inline jobject GetStaticObjectField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticObjectField(env, clazz, fieldID);
-// }
-//
-// static inline jboolean GetStaticBooleanField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticBooleanField(env, clazz, fieldID);
-// }
-//
-// static inline jbyte GetStaticByteField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticByteField(env, clazz, fieldID);
-// }
-//
-// static inline jchar GetStaticCharField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticCharField(env, clazz, fieldID);
-// }
-//
-// static inline jshort GetStaticShortField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticShortField(env, clazz, fieldID);
-// }
-//
-// static inline jint GetStaticIntField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticIntField(env, clazz, fieldID);
-// }
-//
-// static inline jlong GetStaticLongField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticLongField(env, clazz, fieldID);
-// }
-//
-// static inline jfloat GetStaticFloatField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticFloatField(env, clazz, fieldID);
-// }
-//
-// static inline jdouble GetStaticDoubleField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
-//     return (*env)->GetStaticDoubleField(env, clazz, fieldID);
-// }
-//
-// static inline void SetStaticObjectField(JNIEnv * env, jclass clazz, jfieldID fieldID, jobject value) {
-//     (*env)->SetStaticObjectField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticBooleanField(JNIEnv * env, jclass clazz, jfieldID fieldID, jboolean value) {
-//     (*env)->SetStaticBooleanField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticByteField(JNIEnv * env, jclass clazz, jfieldID fieldID, jbyte value) {
-//     (*env)->SetStaticByteField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticCharField(JNIEnv * env, jclass clazz, jfieldID fieldID, jchar value) {
-//     (*env)->SetStaticCharField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticShortField(JNIEnv * env, jclass clazz, jfieldID fieldID, jshort value) {
-//     (*env)->SetStaticShortField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticIntField(JNIEnv * env, jclass clazz, jfieldID fieldID, jint value) {
-//     (*env)->SetStaticIntField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticLongField(JNIEnv * env, jclass clazz, jfieldID fieldID, jlong value) {
-//     (*env)->SetStaticLongField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticFloatField(JNIEnv * env, jclass clazz, jfieldID fieldID, jfloat value) {
-//     (*env)->SetStaticFloatField(env, clazz, fieldID, value);
-// }
-//
-// static inline void SetStaticDoubleField(JNIEnv * env, jclass clazz, jfieldID fieldID, jdouble value) {
-//     (*env)->SetStaticDoubleField(env, clazz, fieldID, value);
-// }
-//
-// static inline jstring NewString(JNIEnv * env, jchar * unicode, jsize len) {
-//     return (*env)->NewString(env, unicode, len);
-// }
-//
-// static inline jsize GetStringLength(JNIEnv * env, jstring str) {
-//     return (*env)->GetStringLength(env, str);
-// }
-//
-// static inline jsize GetStringUTFLength(JNIEnv * env, jstring str) {
-//     return (*env)->GetStringUTFLength(env, str);
-// }
-//
-// static inline jsize GetArrayLength(JNIEnv * env, jarray array) {
-//     return (*env)->GetArrayLength(env, array);
-// }
-//
-// static inline jobjectArray NewObjectArray(JNIEnv * env, jsize len, jclass clazz, jobject init) {
-//     return (*env)->NewObjectArray(env, len, clazz, init);
-// }
-//
-// static inline jobject GetObjectArrayElement(JNIEnv * env, jobjectArray array, jsize index) {
-//     return (*env)->GetObjectArrayElement(env, array, index);
-// }
-//
-// static inline void SetObjectArrayElement(JNIEnv * env, jobjectArray array, jsize index, jobject val) {
-//     (*env)->SetObjectArrayElement(env, array, index, val);
-// }
-//
-// static inline jbooleanArray NewBooleanArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewBooleanArray(env, len);
-// }
-//
-// static inline jbyteArray NewByteArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewByteArray(env, len);
-// }
-//
-// static inline jcharArray NewCharArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewCharArray(env, len);
-// }
-//
-// static inline jshortArray NewShortArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewShortArray(env, len);
-// }
-//
-// static inline jintArray NewIntArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewIntArray(env, len);
-// }
-//
-// static inline jlongArray NewLongArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewLongArray(env, len);
-// }
-//
-// static inline jfloatArray NewFloatArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewFloatArray(env, len);
-// }
-//
-// static inline jdoubleArray NewDoubleArray(JNIEnv * env, jsize len) {
-//     return (*env)->NewDoubleArray(env, len);
-// }
-//
-// static inline void GetBooleanArrayRegion(JNIEnv * env, jbooleanArray array, jsize start, jsize l, jboolean * buf) {
-//     (*env)->GetBooleanArrayRegion(env, array, start, l, buf);
-// }
-//
-// static inline void GetByteArrayRegion(JNIEnv * env, jbyteArray array, jsize start, jsize len, jbyte * buf) {
-//     (*env)->GetByteArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void GetCharArrayRegion(JNIEnv * env, jcharArray array, jsize start, jsize len, jchar * buf) {
-//     (*env)->GetCharArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void GetShortArrayRegion(JNIEnv * env, jshortArray array, jsize start, jsize len, jshort * buf) {
-//     (*env)->GetShortArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void GetIntArrayRegion(JNIEnv * env, jintArray array, jsize start, jsize len, jint * buf) {
-//     (*env)->GetIntArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void GetLongArrayRegion(JNIEnv * env, jlongArray array, jsize start, jsize len, jlong * buf) {
-//     (*env)->GetLongArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void GetFloatArrayRegion(JNIEnv * env, jfloatArray array, jsize start, jsize len, jfloat * buf) {
-//     (*env)->GetFloatArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void GetDoubleArrayRegion(JNIEnv * env, jdoubleArray array, jsize start, jsize len, jdouble * buf) {
-//     (*env)->GetDoubleArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void SetBooleanArrayRegion(JNIEnv * env, jbooleanArray array, jsize start, jsize l, jboolean * buf) {
-//     (*env)->SetBooleanArrayRegion(env, array, start, l, buf);
-// }
-//
-// static inline void SetByteArrayRegion(JNIEnv * env, jbyteArray array, jsize start, jsize len, jbyte * buf) {
-//     (*env)->SetByteArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void SetCharArrayRegion(JNIEnv * env, jcharArray array, jsize start, jsize len, jchar * buf) {
-//     (*env)->SetCharArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void SetShortArrayRegion(JNIEnv * env, jshortArray array, jsize start, jsize len, jshort * buf) {
-//     (*env)->SetShortArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void SetIntArrayRegion(JNIEnv * env, jintArray array, jsize start, jsize len, jint * buf) {
-//     (*env)->SetIntArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void SetLongArrayRegion(JNIEnv * env, jlongArray array, jsize start, jsize len, jlong * buf) {
-//     (*env)->SetLongArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void SetFloatArrayRegion(JNIEnv * env, jfloatArray array, jsize start, jsize len, jfloat * buf) {
-//     (*env)->SetFloatArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline void SetDoubleArrayRegion(JNIEnv * env, jdoubleArray array, jsize start, jsize len, jdouble * buf) {
-//     (*env)->SetDoubleArrayRegion(env, array, start, len, buf);
-// }
-//
-// static inline jint MonitorEnter(JNIEnv * env, jobject obj) {
-//     return (*env)->MonitorEnter(env, obj);
-// }
-//
-// static inline jint MonitorExit(JNIEnv * env, jobject obj) {
-//     return (*env)->MonitorExit(env, obj);
-// }
-//
-// static inline void GetStringUTFRegion(JNIEnv * env, jstring str, jsize start, jsize len, char * buf) {
-//     (*env)->GetStringUTFRegion(env, str, start, len, buf);
-// }
-//
-// static inline void * GetPrimitiveArrayCritical(JNIEnv * env, jarray array) {
-//     return (*env)->GetPrimitiveArrayCritical(env, array, NULL);
-// }
-//
-// static inline void ReleasePrimitiveArrayCritical(JNIEnv * env, jarray array, void * carray, jint mode) {
-//     (*env)->ReleasePrimitiveArrayCritical(env, array, carray, mode);
-// }
-//
-// static inline jweak NewWeakGlobalRef(JNIEnv * env, jobject obj) {
-//     return (*env)->NewWeakGlobalRef(env, obj);
-// }
-//
-// static inline void DeleteWeakGlobalRef(JNIEnv * env, jweak ref) {
-//     (*env)->DeleteWeakGlobalRef(env, ref);
-// }
-//
-// static inline jboolean ExceptionCheck(JNIEnv * env) {
-//     return (*env)->ExceptionCheck(env);
-// }
-//
-// static inline jobject NewDirectByteBuffer(JNIEnv * env, void * address, jlong capacity) {
-//     return (*env)->NewDirectByteBuffer(env, address, capacity);
-// }
-//
-// static inline void * GetDirectBufferAddress(JNIEnv * env, jobject buf) {
-//     return (*env)->GetDirectBufferAddress(env, buf);
-// }
-//
-// static inline jlong GetDirectBufferCapacity(JNIEnv * env, jobject buf) {
-//     return (*env)->GetDirectBufferCapacity(env, buf);
-// }
-//
+/*
+#include <jni.h>
+#include <stdlib.h>
+
+static inline jint AttachCurrentThread(JavaVM *vm, JNIEnv **p_env) {
+    return (*vm)->AttachCurrentThread(vm, (void **) p_env, NULL);
+}
+
+static inline jint AttachCurrentThreadAsDaemon(JavaVM *vm, JNIEnv **p_env) {
+    return (*vm)->AttachCurrentThreadAsDaemon(vm, (void **) p_env, NULL);
+}
+
+static inline jint GetEnv(JavaVM *vm, JNIEnv **penv, jint version) {
+    return (*vm)->GetEnv(vm, (void **) penv, version);
+}
+
+static inline jint GetJavaVM(JNIEnv * env, JavaVM **vm) {
+    return (*env)->GetJavaVM(env, vm);
+}
+
+static inline int GetObjectRefType(JNIEnv * env, jobject obj) {
+    return (int) (*env)->GetObjectRefType(env, obj);
+}
+
+static inline jint DestroyJavaVM(JavaVM * vm) {
+    return (*vm)->DestroyJavaVM(vm);
+}
+
+static inline jint DetachCurrentThread(JavaVM * vm) {
+    return (*vm)->DetachCurrentThread(vm);
+}
+
+static inline jclass FindClass(JNIEnv * env, char * name) {
+    return (*env)->FindClass(env, name);
+}
+
+static inline jint GetVersion(JNIEnv * env) {
+    return (*env)->GetVersion(env);
+}
+
+static inline jmethodID FromReflectedMethod(JNIEnv * env, jobject method) {
+    return (*env)->FromReflectedMethod(env, method);
+}
+
+static inline jfieldID FromReflectedField(JNIEnv * env, jobject field) {
+    return (*env)->FromReflectedField(env, field);
+}
+
+static inline jobject ToReflectedMethod(JNIEnv * env, jclass cls, jmethodID methodID, jboolean isStatic) {
+    return (*env)->ToReflectedMethod(env, cls, methodID, isStatic);
+}
+
+static inline jclass GetSuperclass(JNIEnv * env, jclass sub) {
+    return (*env)->GetSuperclass(env, sub);
+}
+
+static inline jboolean IsAssignableFrom(JNIEnv * env, jclass sub, jclass sup) {
+    return (*env)->IsAssignableFrom(env, sub, sup);
+}
+
+static inline jobject ToReflectedField(JNIEnv * env, jclass cls, jfieldID fieldID, jboolean isStatic) {
+    return (*env)->ToReflectedField(env, cls, fieldID, isStatic);
+}
+
+static inline jint Throw(JNIEnv * env, jthrowable obj) {
+    return (*env)->Throw(env, obj);
+}
+
+static inline jint ThrowNew(JNIEnv * env, jclass clazz, char * msg) {
+    return (*env)->ThrowNew(env, clazz, msg);
+}
+
+static inline jthrowable ExceptionOccurred(JNIEnv * env) {
+    return (*env)->ExceptionOccurred(env);
+}
+
+static inline void ExceptionDescribe(JNIEnv * env) {
+    (*env)->ExceptionDescribe(env);
+}
+
+static inline void ExceptionClear(JNIEnv * env) {
+    (*env)->ExceptionClear(env);
+}
+
+static inline void FatalError(JNIEnv * env, char * msg) {
+    (*env)->FatalError(env, msg);
+}
+
+static inline jint PushLocalFrame(JNIEnv * env, jint capacity) {
+    return (*env)->PushLocalFrame(env, capacity);
+}
+
+static inline jobject PopLocalFrame(JNIEnv * env, jobject result) {
+    return (*env)->PopLocalFrame(env, result);
+}
+
+static inline jobject NewGlobalRef(JNIEnv * env, jobject lobj) {
+    return (*env)->NewGlobalRef(env, lobj);
+}
+
+static inline void DeleteGlobalRef(JNIEnv * env, jobject gref) {
+    (*env)->DeleteGlobalRef(env, gref);
+}
+
+static inline void DeleteLocalRef(JNIEnv * env, jobject obj) {
+    (*env)->DeleteLocalRef(env, obj);
+}
+
+static inline jboolean IsSameObject(JNIEnv * env, jobject obj1, jobject obj2) {
+    return (*env)->IsSameObject(env, obj1, obj2);
+}
+
+static inline jobject NewLocalRef(JNIEnv * env, jobject ref) {
+    return (*env)->NewLocalRef(env, ref);
+}
+
+static inline jint EnsureLocalCapacity(JNIEnv * env, jint capacity) {
+    return (*env)->EnsureLocalCapacity(env, capacity);
+}
+
+static inline jobject AllocObject(JNIEnv * env, jclass clazz) {
+    return (*env)->AllocObject(env, clazz);
+}
+
+static inline jobject NewObjectA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->NewObjectA(env, clazz, methodID, args);
+}
+
+static inline jclass GetObjectClass(JNIEnv * env, jobject obj) {
+    return (*env)->GetObjectClass(env, obj);
+}
+
+static inline jboolean IsInstanceOf(JNIEnv * env, jobject obj, jclass clazz) {
+    return (*env)->IsInstanceOf(env, obj, clazz);
+}
+
+static inline jmethodID GetMethodID(JNIEnv * env, jclass clazz, char * name, char * sig) {
+    return (*env)->GetMethodID(env, clazz, name, sig);
+}
+
+static inline jobject CallObjectMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallObjectMethodA(env, obj, methodID, args);
+}
+
+static inline jboolean CallBooleanMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallBooleanMethodA(env, obj, methodID, args);
+}
+
+static inline jbyte CallByteMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallByteMethodA(env, obj, methodID, args);
+}
+
+static inline jchar CallCharMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallCharMethodA(env, obj, methodID, args);
+}
+
+static inline jshort CallShortMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallShortMethodA(env, obj, methodID, args);
+}
+
+static inline jint CallIntMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallIntMethodA(env, obj, methodID, args);
+}
+
+static inline jlong CallLongMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallLongMethodA(env, obj, methodID, args);
+}
+
+static inline jfloat CallFloatMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallFloatMethodA(env, obj, methodID, args);
+}
+
+static inline jdouble CallDoubleMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    return (*env)->CallDoubleMethodA(env, obj, methodID, args);
+}
+
+static inline void CallVoidMethodA(JNIEnv * env, jobject obj, jmethodID methodID, jvalue * args) {
+    (*env)->CallVoidMethodA(env, obj, methodID, args);
+}
+
+static inline jobject CallNonvirtualObjectMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualObjectMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jboolean CallNonvirtualBooleanMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualBooleanMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jbyte CallNonvirtualByteMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualByteMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jchar CallNonvirtualCharMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualCharMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jshort CallNonvirtualShortMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualShortMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jint CallNonvirtualIntMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualIntMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jlong CallNonvirtualLongMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualLongMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jfloat CallNonvirtualFloatMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualFloatMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jdouble CallNonvirtualDoubleMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallNonvirtualDoubleMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline void CallNonvirtualVoidMethodA(JNIEnv * env, jobject obj, jclass clazz, jmethodID methodID, jvalue * args) {
+    (*env)->CallNonvirtualVoidMethodA(env, obj, clazz, methodID, args);
+}
+
+static inline jfieldID GetFieldID(JNIEnv * env, jclass clazz, char * name, char * sig) {
+    return (*env)->GetFieldID(env, clazz, name, sig);
+}
+
+static inline jobject GetObjectField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetObjectField(env, obj, fieldID);
+}
+
+static inline jboolean GetBooleanField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetBooleanField(env, obj, fieldID);
+}
+
+static inline jbyte GetByteField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetByteField(env, obj, fieldID);
+}
+
+static inline jchar GetCharField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetCharField(env, obj, fieldID);
+}
+
+static inline jshort GetShortField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetShortField(env, obj, fieldID);
+}
+
+static inline jint GetIntField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetIntField(env, obj, fieldID);
+}
+
+static inline jlong GetLongField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetLongField(env, obj, fieldID);
+}
+
+static inline jfloat GetFloatField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetFloatField(env, obj, fieldID);
+}
+
+static inline jdouble GetDoubleField(JNIEnv * env, jobject obj, jfieldID fieldID) {
+    return (*env)->GetDoubleField(env, obj, fieldID);
+}
+
+static inline void SetObjectField(JNIEnv * env, jobject obj, jfieldID fieldID, jobject val) {
+    (*env)->SetObjectField(env, obj, fieldID, val);
+}
+
+static inline void SetBooleanField(JNIEnv * env, jobject obj, jfieldID fieldID, jboolean val) {
+    (*env)->SetBooleanField(env, obj, fieldID, val);
+}
+
+static inline void SetByteField(JNIEnv * env, jobject obj, jfieldID fieldID, jbyte val) {
+    (*env)->SetByteField(env, obj, fieldID, val);
+}
+
+static inline void SetCharField(JNIEnv * env, jobject obj, jfieldID fieldID, jchar val) {
+    (*env)->SetCharField(env, obj, fieldID, val);
+}
+
+static inline void SetShortField(JNIEnv * env, jobject obj, jfieldID fieldID, jshort val) {
+    (*env)->SetShortField(env, obj, fieldID, val);
+}
+
+static inline void SetIntField(JNIEnv * env, jobject obj, jfieldID fieldID, jint val) {
+    (*env)->SetIntField(env, obj, fieldID, val);
+}
+
+static inline void SetLongField(JNIEnv * env, jobject obj, jfieldID fieldID, jlong val) {
+    (*env)->SetLongField(env, obj, fieldID, val);
+}
+
+static inline void SetFloatField(JNIEnv * env, jobject obj, jfieldID fieldID, jfloat val) {
+    (*env)->SetFloatField(env, obj, fieldID, val);
+}
+
+static inline void SetDoubleField(JNIEnv * env, jobject obj, jfieldID fieldID, jdouble val) {
+    (*env)->SetDoubleField(env, obj, fieldID, val);
+}
+
+static inline jmethodID GetStaticMethodID(JNIEnv * env, jclass clazz, char * name, char * sig) {
+    return (*env)->GetStaticMethodID(env, clazz, name, sig);
+}
+
+static inline jobject CallStaticObjectMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticObjectMethodA(env, clazz, methodID, args);
+}
+
+static inline jboolean CallStaticBooleanMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticBooleanMethodA(env, clazz, methodID, args);
+}
+
+static inline jbyte CallStaticByteMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticByteMethodA(env, clazz, methodID, args);
+}
+
+static inline jchar CallStaticCharMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticCharMethodA(env, clazz, methodID, args);
+}
+
+static inline jshort CallStaticShortMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticShortMethodA(env, clazz, methodID, args);
+}
+
+static inline jint CallStaticIntMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticIntMethodA(env, clazz, methodID, args);
+}
+
+static inline jlong CallStaticLongMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticLongMethodA(env, clazz, methodID, args);
+}
+
+static inline jfloat CallStaticFloatMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticFloatMethodA(env, clazz, methodID, args);
+}
+
+static inline jdouble CallStaticDoubleMethodA(JNIEnv * env, jclass clazz, jmethodID methodID, jvalue * args) {
+    return (*env)->CallStaticDoubleMethodA(env, clazz, methodID, args);
+}
+
+static inline void CallStaticVoidMethodA(JNIEnv * env, jclass cls, jmethodID methodID, jvalue * args) {
+    (*env)->CallStaticVoidMethodA(env, cls, methodID, args);
+}
+
+static inline jfieldID GetStaticFieldID(JNIEnv * env, jclass clazz, char * name, char * sig) {
+    return (*env)->GetStaticFieldID(env, clazz, name, sig);
+}
+
+static inline jobject GetStaticObjectField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticObjectField(env, clazz, fieldID);
+}
+
+static inline jboolean GetStaticBooleanField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticBooleanField(env, clazz, fieldID);
+}
+
+static inline jbyte GetStaticByteField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticByteField(env, clazz, fieldID);
+}
+
+static inline jchar GetStaticCharField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticCharField(env, clazz, fieldID);
+}
+
+static inline jshort GetStaticShortField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticShortField(env, clazz, fieldID);
+}
+
+static inline jint GetStaticIntField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticIntField(env, clazz, fieldID);
+}
+
+static inline jlong GetStaticLongField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticLongField(env, clazz, fieldID);
+}
+
+static inline jfloat GetStaticFloatField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticFloatField(env, clazz, fieldID);
+}
+
+static inline jdouble GetStaticDoubleField(JNIEnv * env, jclass clazz, jfieldID fieldID) {
+    return (*env)->GetStaticDoubleField(env, clazz, fieldID);
+}
+
+static inline void SetStaticObjectField(JNIEnv * env, jclass clazz, jfieldID fieldID, jobject value) {
+    (*env)->SetStaticObjectField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticBooleanField(JNIEnv * env, jclass clazz, jfieldID fieldID, jboolean value) {
+    (*env)->SetStaticBooleanField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticByteField(JNIEnv * env, jclass clazz, jfieldID fieldID, jbyte value) {
+    (*env)->SetStaticByteField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticCharField(JNIEnv * env, jclass clazz, jfieldID fieldID, jchar value) {
+    (*env)->SetStaticCharField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticShortField(JNIEnv * env, jclass clazz, jfieldID fieldID, jshort value) {
+    (*env)->SetStaticShortField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticIntField(JNIEnv * env, jclass clazz, jfieldID fieldID, jint value) {
+    (*env)->SetStaticIntField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticLongField(JNIEnv * env, jclass clazz, jfieldID fieldID, jlong value) {
+    (*env)->SetStaticLongField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticFloatField(JNIEnv * env, jclass clazz, jfieldID fieldID, jfloat value) {
+    (*env)->SetStaticFloatField(env, clazz, fieldID, value);
+}
+
+static inline void SetStaticDoubleField(JNIEnv * env, jclass clazz, jfieldID fieldID, jdouble value) {
+    (*env)->SetStaticDoubleField(env, clazz, fieldID, value);
+}
+
+static inline jstring NewString(JNIEnv * env, jchar * unicode, jsize len) {
+    return (*env)->NewString(env, unicode, len);
+}
+
+static inline jsize GetStringLength(JNIEnv * env, jstring str) {
+    return (*env)->GetStringLength(env, str);
+}
+
+static inline jsize GetStringUTFLength(JNIEnv * env, jstring str) {
+    return (*env)->GetStringUTFLength(env, str);
+}
+
+static inline jsize GetArrayLength(JNIEnv * env, jarray array) {
+    return (*env)->GetArrayLength(env, array);
+}
+
+static inline jobjectArray NewObjectArray(JNIEnv * env, jsize len, jclass clazz, jobject init) {
+    return (*env)->NewObjectArray(env, len, clazz, init);
+}
+
+static inline jobject GetObjectArrayElement(JNIEnv * env, jobjectArray array, jsize index) {
+    return (*env)->GetObjectArrayElement(env, array, index);
+}
+
+static inline void SetObjectArrayElement(JNIEnv * env, jobjectArray array, jsize index, jobject val) {
+    (*env)->SetObjectArrayElement(env, array, index, val);
+}
+
+static inline jbooleanArray NewBooleanArray(JNIEnv * env, jsize len) {
+    return (*env)->NewBooleanArray(env, len);
+}
+
+static inline jbyteArray NewByteArray(JNIEnv * env, jsize len) {
+    return (*env)->NewByteArray(env, len);
+}
+
+static inline jcharArray NewCharArray(JNIEnv * env, jsize len) {
+    return (*env)->NewCharArray(env, len);
+}
+
+static inline jshortArray NewShortArray(JNIEnv * env, jsize len) {
+    return (*env)->NewShortArray(env, len);
+}
+
+static inline jintArray NewIntArray(JNIEnv * env, jsize len) {
+    return (*env)->NewIntArray(env, len);
+}
+
+static inline jlongArray NewLongArray(JNIEnv * env, jsize len) {
+    return (*env)->NewLongArray(env, len);
+}
+
+static inline jfloatArray NewFloatArray(JNIEnv * env, jsize len) {
+    return (*env)->NewFloatArray(env, len);
+}
+
+static inline jdoubleArray NewDoubleArray(JNIEnv * env, jsize len) {
+    return (*env)->NewDoubleArray(env, len);
+}
+
+static inline void GetBooleanArrayRegion(JNIEnv * env, jbooleanArray array, jsize start, jsize l, jboolean * buf) {
+    (*env)->GetBooleanArrayRegion(env, array, start, l, buf);
+}
+
+static inline void GetByteArrayRegion(JNIEnv * env, jbyteArray array, jsize start, jsize len, jbyte * buf) {
+    (*env)->GetByteArrayRegion(env, array, start, len, buf);
+}
+
+static inline void GetCharArrayRegion(JNIEnv * env, jcharArray array, jsize start, jsize len, jchar * buf) {
+    (*env)->GetCharArrayRegion(env, array, start, len, buf);
+}
+
+static inline void GetShortArrayRegion(JNIEnv * env, jshortArray array, jsize start, jsize len, jshort * buf) {
+    (*env)->GetShortArrayRegion(env, array, start, len, buf);
+}
+
+static inline void GetIntArrayRegion(JNIEnv * env, jintArray array, jsize start, jsize len, jint * buf) {
+    (*env)->GetIntArrayRegion(env, array, start, len, buf);
+}
+
+static inline void GetLongArrayRegion(JNIEnv * env, jlongArray array, jsize start, jsize len, jlong * buf) {
+    (*env)->GetLongArrayRegion(env, array, start, len, buf);
+}
+
+static inline void GetFloatArrayRegion(JNIEnv * env, jfloatArray array, jsize start, jsize len, jfloat * buf) {
+    (*env)->GetFloatArrayRegion(env, array, start, len, buf);
+}
+
+static inline void GetDoubleArrayRegion(JNIEnv * env, jdoubleArray array, jsize start, jsize len, jdouble * buf) {
+    (*env)->GetDoubleArrayRegion(env, array, start, len, buf);
+}
+
+static inline void SetBooleanArrayRegion(JNIEnv * env, jbooleanArray array, jsize start, jsize l, jboolean * buf) {
+    (*env)->SetBooleanArrayRegion(env, array, start, l, buf);
+}
+
+static inline void SetByteArrayRegion(JNIEnv * env, jbyteArray array, jsize start, jsize len, jbyte * buf) {
+    (*env)->SetByteArrayRegion(env, array, start, len, buf);
+}
+
+static inline void SetCharArrayRegion(JNIEnv * env, jcharArray array, jsize start, jsize len, jchar * buf) {
+    (*env)->SetCharArrayRegion(env, array, start, len, buf);
+}
+
+static inline void SetShortArrayRegion(JNIEnv * env, jshortArray array, jsize start, jsize len, jshort * buf) {
+    (*env)->SetShortArrayRegion(env, array, start, len, buf);
+}
+
+static inline void SetIntArrayRegion(JNIEnv * env, jintArray array, jsize start, jsize len, jint * buf) {
+    (*env)->SetIntArrayRegion(env, array, start, len, buf);
+}
+
+static inline void SetLongArrayRegion(JNIEnv * env, jlongArray array, jsize start, jsize len, jlong * buf) {
+    (*env)->SetLongArrayRegion(env, array, start, len, buf);
+}
+
+static inline void SetFloatArrayRegion(JNIEnv * env, jfloatArray array, jsize start, jsize len, jfloat * buf) {
+    (*env)->SetFloatArrayRegion(env, array, start, len, buf);
+}
+
+static inline void SetDoubleArrayRegion(JNIEnv * env, jdoubleArray array, jsize start, jsize len, jdouble * buf) {
+    (*env)->SetDoubleArrayRegion(env, array, start, len, buf);
+}
+
+static inline jint MonitorEnter(JNIEnv * env, jobject obj) {
+    return (*env)->MonitorEnter(env, obj);
+}
+
+static inline jint MonitorExit(JNIEnv * env, jobject obj) {
+    return (*env)->MonitorExit(env, obj);
+}
+
+static inline void GetStringUTFRegion(JNIEnv * env, jstring str, jsize start, jsize len, char * buf) {
+    (*env)->GetStringUTFRegion(env, str, start, len, buf);
+}
+
+static inline void * GetPrimitiveArrayCritical(JNIEnv * env, jarray array) {
+    return (*env)->GetPrimitiveArrayCritical(env, array, NULL);
+}
+
+static inline void ReleasePrimitiveArrayCritical(JNIEnv * env, jarray array, void * carray, jint mode) {
+    (*env)->ReleasePrimitiveArrayCritical(env, array, carray, mode);
+}
+
+static inline jweak NewWeakGlobalRef(JNIEnv * env, jobject obj) {
+    return (*env)->NewWeakGlobalRef(env, obj);
+}
+
+static inline void DeleteWeakGlobalRef(JNIEnv * env, jweak ref) {
+    (*env)->DeleteWeakGlobalRef(env, ref);
+}
+
+static inline jboolean ExceptionCheck(JNIEnv * env) {
+    return (*env)->ExceptionCheck(env);
+}
+
+static inline jobject NewDirectByteBuffer(JNIEnv * env, void * address, jlong capacity) {
+    return (*env)->NewDirectByteBuffer(env, address, capacity);
+}
+
+static inline void * GetDirectBufferAddress(JNIEnv * env, jobject buf) {
+    return (*env)->GetDirectBufferAddress(env, buf);
+}
+
+static inline jlong GetDirectBufferCapacity(JNIEnv * env, jobject buf) {
+    return (*env)->GetDirectBufferCapacity(env, buf);
+}
+*/
 import "C"
 import (
 	"unicode/utf16"
