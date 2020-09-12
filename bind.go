@@ -1360,6 +1360,12 @@ func (env Env) ExceptionCheck() bool {
 	return C.ExceptionCheck((*C.JNIEnv)(unsafe.Pointer(env))) != C.JNI_FALSE
 }
 
+//############# jvalue #########################
+func StringValue(env Env, s string) Jvalue {
+	js := env.NewString(s)
+	return Jvalue(js)
+}
+
 func DoubleValue(f float64) Jvalue {
 	return *(*Jvalue)(unsafe.Pointer(&f))
 }
@@ -1387,6 +1393,8 @@ func IntValue(i int) Jvalue {
 func BooleanValue(b bool) Jvalue {
 	return Jvalue(cbool(b))
 }
+
+//#########################################################################
 
 func Bool(b uint8) bool {
 	return b != 0
