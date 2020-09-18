@@ -67,13 +67,14 @@ func (vm *Vm) Parse(s string) []Expr {
 	var tempChars []byte
 	var spaceStrings []string
 	var nodes []Expr
-	var nh nodeHeap
+	var nh NodeHeap
+	var currentSig StrHeap
 	for i := 0; i < len(s); i += 1 {
 		c := s[i]
 		switch {
 		case c == '[':
 			index := strings.Index(s[i:], "]")
-			vm.currentSig = s[i+1 : i+index]
+			currentSig.Push(s[i+1 : i+index])
 			i = i + index
 		case c == ' ':
 			c := string(tempChars)
@@ -103,6 +104,7 @@ func (vm *Vm) Parse(s string) []Expr {
 			next := matchingNextSymbol('(', s[i:])
 			if next > 1 {
 				cal.Args = vm.getArgs(s[i+1 : i+next])
+				i += next
 			}
 			if strings.HasPrefix(ex, "new") { //instance
 				cal.Owner = Class{Name: strings.ReplaceAll(ex, "new", "")}
@@ -116,7 +118,11 @@ func (vm *Vm) Parse(s string) []Expr {
 				cal.ClassTyp = STATICOJB
 				cal.Method = MethodMeta{
 					Name: ex[i+1:],
-					Sig:  GetSig(vm.getCurrent()),
+				}
+				if sig := currentSig.Pop(); sig != nil {
+					cal.Method.Sig = GetSig(sig.(string))
+				} else {
+					panic(fmt.Sprintf("method [%s] no sign in %s", cal.Method.Name, s))
 				}
 			}
 			topNode := nh.Top()
@@ -175,15 +181,6 @@ func (vm *Vm) getArgs(args string) []Expr {
 		}
 	}
 	return v
-}
-
-func (vm *Vm) getCurrent() string {
-	//if vm.currentSig == "" {
-	//	panic("get sig error vm.currentSig == null")
-	//}
-	rel := vm.currentSig
-	vm.currentSig = ""
-	return rel
 }
 
 func (vm *Vm) run(exp Expr) {

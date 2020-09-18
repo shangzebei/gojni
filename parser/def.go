@@ -6,9 +6,8 @@ import (
 )
 
 type Vm struct {
-	env        jni.Env
-	currentSig string
-	check      bool
+	env   jni.Env
+	check bool
 }
 
 const (
@@ -37,7 +36,7 @@ func (c *Class) String() string {
 }
 
 func (a MethodSig) String() string {
-	return a.Sig
+	return fmt.Sprintf("sig %s", a.Sig)
 }
 
 func (a Arg) exprNode() {}
