@@ -1,14 +1,15 @@
-package parser
+package jparser
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/jni"
-	"github.com/mohae/deepcopy"
 	"log"
 	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"gitee.com/aifuturewell/gojni/jni"
+	"github.com/mohae/deepcopy"
 )
 
 type Expr interface {

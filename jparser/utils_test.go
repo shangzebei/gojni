@@ -1,4 +1,4 @@
-package parser
+package jparser
 
 import (
 	"fmt"
@@ -15,7 +15,6 @@ func TestMatch(t *testing.T) {
 	fmt.Println(matchingNextSymbol('[', "]]]]"))
 }
 
-
 func TestMachAll(t *testing.T) {
 	for s, i := range testSyml {
 		if index := matchingNextSymbol('(', s); index != i {
@@ -23,5 +22,3 @@ func TestMachAll(t *testing.T) {
 		}
 	}
 }
-
-

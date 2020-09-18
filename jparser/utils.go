@@ -1,4 +1,4 @@
-package parser
+package jparser
 
 import (
 	"fmt"

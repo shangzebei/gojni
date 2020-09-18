@@ -1,7 +1,8 @@
-package parser
+package jparser
 
 import (
 	"fmt"
+
 	"gitee.com/aifuturewell/gojni/jni"
 )
 

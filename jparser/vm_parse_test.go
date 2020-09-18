@@ -1,4 +1,4 @@
-package parser
+package jparser
 
 import (
 	"fmt"
@@ -14,10 +14,11 @@ var testSets = []string{
 	"@2=$1.getName[java.lang.String()]();@3=com.szb.Miner.show[void(java.lang.String)](@2);",
 	"@3=$1.show[void(java.lang.String)]($2.getName[java.lang.String()]());",
 	"$2.getName[java.lang.String()]();",
+	"new com.szb.Hello[void()]().show[void()]()",
 }
 
 func TestParse(t *testing.T) {
-	v := Vm{}
+	v := Vm{check: false}
 	fmt.Println(v.Parse(testSets[6]))
 }
 
