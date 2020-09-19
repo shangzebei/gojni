@@ -1,10 +1,10 @@
-
 package jni
 
 /*
 #include <jni.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <dlfcn.h>
 static JavaVM *jvm;
 static pthread_key_t jnienvs;
 
@@ -19,6 +19,9 @@ static void env_destructor(void *env) {
 
 static JNIEnv *go_seq_get_thread_env(void) {
 	JNIEnv *env;
+	if(jvm == 0){
+		LOG_FATAL("jvm is null");
+	}
 	jint ret = (*jvm)->GetEnv(jvm, (void **)&env, JNI_VERSION_1_6);
 	if (ret != JNI_OK) {
 		if (ret != JNI_EDETACHED) {
@@ -33,6 +36,9 @@ static JNIEnv *go_seq_get_thread_env(void) {
 }
 
 static void init(JavaVM *j){
+     Dl_info dl_info;
+     dladdr((void *)init, &dl_info);
+     fprintf(stderr, "module %s loaded\n", dl_info.dli_fname);
      jvm = j;
 	 if (pthread_key_create(&jnienvs, env_destructor) != 0) {
 	   LOG_FATAL("failed to initialize jnienvs thread local storage");

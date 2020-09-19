@@ -6,7 +6,7 @@ import (
 	"gitee.com/aifuturewell/gojni/jni"
 )
 
-type Vm struct {
+type Compiler struct {
 	env   jni.Env
 	check bool
 }
@@ -14,6 +14,7 @@ type Vm struct {
 const (
 	STATICOJB int = iota
 	NEWOBJECT
+	OBJECTINVOKE
 )
 
 func (Define) exprNode() {}
@@ -28,16 +29,12 @@ func (a *Assignment) String() string {
 
 func (Call) exprNode() {}
 func (c *Call) String() string {
-	return fmt.Sprintf("(CALL Class: %s Method: %s Args %s)", c.Owner, c.Method, c.Args)
+	return fmt.Sprintf("(CALL Class: %s type %d Method: %s Args %s)", c.Owner, c.ClassTyp, c.Method, c.Args)
 }
 
 func (Class) exprNode() {}
 func (c *Class) String() string {
 	return fmt.Sprintf("(Owner: %s )", c.Name)
-}
-
-func (a MethodSig) String() string {
-	return fmt.Sprintf("sig %s", a.Sig)
 }
 
 func (a Arg) exprNode() {}

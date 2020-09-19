@@ -1,11 +1,11 @@
-package jparser
+package utils
 
 import (
 	"fmt"
 	"strings"
 )
 
-var sigMap = map[string]string{
+var SigMap = map[string]string{
 	"int":     "I",
 	"boolean": "Z",
 	"byte":    "B",
@@ -17,7 +17,7 @@ var sigMap = map[string]string{
 	"void":    "V",
 }
 
-var sv = map[string]string{
+var SV = map[string]string{
 	"I": "Int",
 	"Z": "Boolean",
 	"B": "Byte",
@@ -29,12 +29,23 @@ var sv = map[string]string{
 	"V": "Void",
 }
 
-func GetSig(oSig string) MethodSig { //(I)V
+type MethodSig struct {
+	RetTyp   string
+	ParamTyp []string
+	Sig      string
+}
+
+func (a MethodSig) String() string {
+	return fmt.Sprintf("sig %s", a.Sig)
+}
+
+//example void()
+func GetSig(oSig string) *MethodSig { //(I)V
 	m := MethodSig{}
 	if oSig == "" {
 		m.RetTyp = "VOID"
 		m.Sig = "()V"
-		return m
+		return &m
 	}
 	pos := strings.Index(oSig, "(")
 	ret := oSig[:pos]
@@ -43,7 +54,7 @@ func GetSig(oSig string) MethodSig { //(I)V
 		retV = "["
 		ret = strings.ReplaceAll(ret, "[]", "")
 	}
-	if v, b := sigMap[ret]; b {
+	if v, b := SigMap[ret]; b {
 		retV += v
 	} else { //class
 		retV += "L" + strings.ReplaceAll(ret, ".", "/") + ";"
@@ -60,7 +71,7 @@ func GetSig(oSig string) MethodSig { //(I)V
 				inputV = "["
 				value = strings.ReplaceAll(value, "[]", "")
 			}
-			if v, b := sigMap[value]; b {
+			if v, b := SigMap[value]; b {
 				inputV += v
 				if i != l {
 					inputV += ","
@@ -71,5 +82,5 @@ func GetSig(oSig string) MethodSig { //(I)V
 		}
 	}
 	m.Sig = fmt.Sprintf("(%s)%s", inputV, retV)
-	return m
+	return &m
 }

@@ -1,4 +1,4 @@
-package jparser
+package utils
 
 import (
 	"testing"

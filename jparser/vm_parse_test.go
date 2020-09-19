@@ -7,7 +7,7 @@ import (
 
 var testSets = []string{
 	"java.lang.Thread t = java.lang.Thread.currentThread[java.lang.Thread()]();@1=t.getName[void()]();",
-	"@1=new java.util.Date().toString[void()]();",
+	"@1=new java.util.Date[void()]().toString[void()]();",
 	"java.lang.Thread t = java.lang.Thread.currentThread[java.lang.Thread()]();@1=t.getName[java.lang.String(void)]();",
 	"@1=t.getName[void()]();@2=t.getSex[void(int)]();",
 	"@1=com.szb.Miner.show[void(int)]($1,$2);", //param
@@ -15,15 +15,16 @@ var testSets = []string{
 	"@3=$1.show[void(java.lang.String)]($2.getName[java.lang.String()]());",
 	"$2.getName[java.lang.String()]();",
 	"new com.szb.Hello[void()]().show[void()]()",
+	"com.szb.Hello.send[void()]()",
 }
 
 func TestParse(t *testing.T) {
-	v := Vm{check: false}
-	fmt.Println(v.Parse(testSets[6]))
+	v := Compiler{check: false}
+	fmt.Println(v.Parse(testSets[8]))
 }
 
 func TestRun(t *testing.T) {
-	v := Vm{}
+	v := Compiler{}
 	for i, set := range testSets {
 		fmt.Printf("[%d] %s\n", i, set)
 		fmt.Println(Print(v.Parse(set)))

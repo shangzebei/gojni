@@ -1,4 +1,3 @@
-
 package jni
 
 import (
@@ -70,7 +69,7 @@ func PrintException(JNIEnv Env, jthrowable Jthrowable) {
 /**
  *
  */
-func CheckNullException(msg string, ok func(env Env), checkNull ...uintptr, ) {
+func CheckNullException(msg string, ok func(env Env), checkNull ...uintptr) {
 	has := false
 	s := ""
 	for i, u := range checkNull {
@@ -85,6 +84,14 @@ func CheckNullException(msg string, ok func(env Env), checkNull ...uintptr, ) {
 		JavaThrowException(env, JavaNullPointerException, msg+s)
 	} else {
 		ok(env)
+	}
+}
+
+func CheckNull(uin uintptr, msg string) {
+	if uin == 0 {
+		env := AutoGetCurrentThreadEnv()
+		JavaThrowException(env, JavaNullPointerException, msg)
+		panic(msg)
 	}
 }
 

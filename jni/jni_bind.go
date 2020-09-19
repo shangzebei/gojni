@@ -1,4 +1,3 @@
-
 package jni
 
 /*
@@ -583,6 +582,11 @@ static inline void * GetDirectBufferAddress(JNIEnv * env, jobject buf) {
 
 static inline jlong GetDirectBufferCapacity(JNIEnv * env, jobject buf) {
     return (*env)->GetDirectBufferCapacity(env, buf);
+}
+
+static inline jint RegisterNatives(JNIEnv * env,jclass clazz, const JNINativeMethod* methods, jint nMethods){
+	//printf("name = %s sig = %s len = %d ptr =%d \n",methods[0].name,methods[0].signature,nMethods,methods[0].fnPtr);
+	return (*env)->RegisterNatives(env,clazz, methods,nMethods);
 }
 */
 import "C"
@@ -1359,6 +1363,34 @@ func (env Env) DeleteWeakGlobalRef(ref Jweak) {
 
 func (env Env) ExceptionCheck() bool {
 	return C.ExceptionCheck((*C.JNIEnv)(unsafe.Pointer(env))) != C.JNI_FALSE
+}
+
+type JNINativeMethod struct {
+	Name  string
+	Sig   string
+	FnPtr unsafe.Pointer
+}
+
+//jclass clazz, const JNINativeMethod* methods, jint nMethods
+func (env Env) RegisterNatives(class Jclass, methods []JNINativeMethod) int {
+	len := len(methods)
+	var kk [100]C.JNINativeMethod
+	//var free [100]unsafe.Pointer
+	for i := 0; i < len; i++ {
+		s := methods[i]
+		_name := C.CString(s.Name)
+		_signature := C.CString(s.Sig)
+		kk[i] = C.JNINativeMethod{
+			name:      _name,
+			signature: _signature,
+			fnPtr:     s.FnPtr,
+		}
+	}
+	i := int(C.RegisterNatives((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(class), (*C.JNINativeMethod)(unsafe.Pointer(&kk)), C.jint(len)))
+	//for _, fr := range free {
+	//	C.free(fr)
+	//}
+	return i
 }
 
 //############# jvalue #########################

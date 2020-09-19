@@ -2,13 +2,11 @@ package jparser
 
 import (
 	"fmt"
-	"log"
-	"reflect"
+	"gitee.com/aifuturewell/gojni/utils"
 	"regexp"
 	"strconv"
 	"strings"
 
-	"gitee.com/aifuturewell/gojni/jni"
 	"github.com/mohae/deepcopy"
 )
 
@@ -30,21 +28,15 @@ type Assignment struct {
 	To   Expr
 }
 
-type MethodSig struct {
-	RetTyp   string
-	ParamTyp []string
-	Sig      string
-}
-
 type MethodMeta struct {
 	Name string
-	Sig  MethodSig
+	Sig  *utils.MethodSig
 }
 
 type Call struct {
 	ClassTyp int
 	Owner    Expr
-	Method   MethodMeta
+	Method   *MethodMeta
 	Args     []Expr
 }
 
@@ -53,14 +45,14 @@ type Arg struct {
 	ArgN int64
 }
 
-func (vm *Vm) checkSyntax(s string) bool {
+func (vm *Compiler) checkSyntax(s string) bool {
 	if !strings.HasSuffix(s, ";") {
 		return false
 	}
 	return true
 }
 
-func (vm *Vm) Parse(s string) []Expr {
+func (vm *Compiler) Parse(s string) []Expr {
 	if vm.check && !vm.checkSyntax(s) {
 		return nil
 	}
@@ -102,29 +94,29 @@ func (vm *Vm) Parse(s string) []Expr {
 		case c == '(': //invoke sub Method
 			ex := string(tempChars)
 			cal := new(Call)
-			next := matchingNextSymbol('(', s[i:])
+			next := utils.MatchingNextSymbol('(', s[i:])
 			if next > 1 {
 				cal.Args = vm.getArgs(s[i+1 : i+next])
 				i += next
 			}
 			if strings.HasPrefix(ex, "new") { //instance
-				cal.Owner = Class{Name: strings.ReplaceAll(ex, "new", "")}
+				cal.Owner = &Class{Name: strings.ReplaceAll(ex, "new", "")}
 				cal.ClassTyp = NEWOBJECT
-				cal.Method = MethodMeta{
-					Name: "init",
+				cal.Method = &MethodMeta{
+					Name: "<init>",
 				}
 			} else { //static
 				i := strings.LastIndexByte(ex, '.')
-				cal.Owner = Class{ex[0:i]}
+				cal.Owner = &Class{ex[0:i]}
 				cal.ClassTyp = STATICOJB
-				cal.Method = MethodMeta{
+				cal.Method = &MethodMeta{
 					Name: ex[i+1:],
 				}
-				if sig := currentSig.Pop(); sig != nil {
-					cal.Method.Sig = GetSig(sig.(string))
-				} else {
-					panic(fmt.Sprintf("method [%s] no sign in %s", cal.Method.Name, s))
-				}
+			}
+			if sig := currentSig.Pop(); sig != nil {
+				cal.Method.Sig = utils.GetSig(sig.(string))
+			} else {
+				panic(fmt.Sprintf("method [%s] no sign in %s", cal.Method.Name, s))
 			}
 			topNode := nh.Top()
 			if topNode != nil {
@@ -133,6 +125,7 @@ func (vm *Vm) Parse(s string) []Expr {
 				}
 				if e, b := topNode.(*Call); b {
 					cal.Owner = e
+					cal.ClassTyp = OBJECTINVOKE
 					*e = *(deepcopy.Copy(cal).(*Call))
 				}
 			}
@@ -158,7 +151,7 @@ func (vm *Vm) Parse(s string) []Expr {
 	return nodes
 
 }
-func (vm *Vm) getArgs(args string) []Expr {
+func (vm *Compiler) getArgs(args string) []Expr {
 	var v []Expr
 	sps := strings.Split(args, ",")
 	for _, sp := range sps {
@@ -182,42 +175,4 @@ func (vm *Vm) getArgs(args string) []Expr {
 		}
 	}
 	return v
-}
-
-func (vm *Vm) run(exp Expr) {
-	switch exp.(type) {
-	case *Assignment:
-		as := exp.(*Assignment)
-		vm.run(as.From)
-	case *Call:
-		vm.call(exp.(*Call))
-	case *Define:
-
-	default:
-		log.Fatal("not support")
-	}
-}
-
-func (vm *Vm) call(c *Call) {
-	var jcls jni.Jclass
-	switch c.Owner.(type) {
-	case *Class:
-		cls := c.Owner.(*Class)
-		jcls = vm.env.FindClass(cls.Name)
-	case *Call:
-		vm.call(c.Owner.(*Call))
-	}
-	jmethod := vm.env.GetMethodID(jcls, c.Method.Name, c.Method.Sig.String())
-	if c.ClassTyp == STATICOJB { //static call
-		sig := "Object"
-		if s, b := sv[c.Method.Sig.RetTyp]; b {
-			sig = s
-		}
-		method := reflect.ValueOf(vm.env).MethodByName(fmt.Sprintf("CallStatic%sMethodA", sig))
-		ret := method.Call([]reflect.Value{reflect.ValueOf(jcls), reflect.ValueOf(jmethod)})
-		fmt.Println(ret)
-	} else if c.ClassTyp == NEWOBJECT {
-
-	}
-
 }
