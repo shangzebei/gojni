@@ -56,28 +56,39 @@ func GetSig(oSig string) *MethodSig { //(I)V
 	}
 	if v, b := SigMap[ret]; b {
 		retV += v
-	} else { //class
+	} else if strings.Contains(ret, ".") { //class
 		retV += "L" + strings.ReplaceAll(ret, ".", "/") + ";"
+	} else {
+		panic(fmt.Sprintf("not find ret sig %s", ret))
 	}
 	m.RetTyp = retV
 	inputV := ""
 	input := oSig[pos+1 : len(oSig)-1]
 	if input != "" {
 		kk := strings.Split(input, ",")
-		l := len(kk) - 1
+		//l := len(kk) - 1
 		for i := 0; i < len(kk); i++ {
 			value := kk[i]
+			isArray := false
 			if strings.Contains(value, "[]") {
 				inputV = "["
 				value = strings.ReplaceAll(value, "[]", "")
+				isArray = true
 			}
 			if v, b := SigMap[value]; b {
-				inputV += v
-				if i != l {
-					inputV += ","
+				if isArray {
+					m.ParamTyp = append(m.ParamTyp, "["+v)
+				} else {
+					m.ParamTyp = append(m.ParamTyp, v)
 				}
+				inputV += v
+				//if i != l {
+				//	inputV += ","
+				//}
 			} else {
-				inputV += "L" + strings.ReplaceAll(value, ".", "/") + ";"
+				s := strings.ReplaceAll(value, ".", "/") + ";"
+				inputV += "L" + s
+				m.ParamTyp = append(m.ParamTyp, s)
 			}
 		}
 	}
