@@ -771,37 +771,45 @@ func (env Env) GetStringUTF(ptr Jstring) []byte {
 	return ret
 }
 
+func cBool(goBool bool) C.jboolean {
+	if goBool {
+		return C.jboolean(1)
+	} else {
+		return C.jboolean(0)
+	}
+}
+
 //////////////////////////////////////////////ArrayElements/////////////////////////////////////////////////////////////
-func (env Env) GetBooleanArrayElements(array Jarray, isCopy byte) *C.uchar {
-	return C.GetBooleanArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbooleanArray(array), C.jboolean(isCopy))
+func (env Env) GetBooleanArrayElements(array Jarray, isCopy bool) unsafe.Pointer {
+	return unsafe.Pointer(C.GetBooleanArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbooleanArray(array), cBool(isCopy)))
 }
 
-func (env Env) GetCharArrayElements(array JcharArray, isCopy byte) *C.ushort {
-	return C.GetCharArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jcharArray(array), C.jboolean(isCopy))
+func (env Env) GetCharArrayElements(array JcharArray, isCopy bool) *C.ushort {
+	return C.GetCharArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jcharArray(array), cBool(isCopy))
 }
 
-func (env Env) GetShortArrayElements(array JshortArray, isCopy byte) *C.short {
-	return C.GetShortArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jshortArray(array), C.jboolean(isCopy))
+func (env Env) GetShortArrayElements(array JshortArray, isCopy bool) *C.short {
+	return C.GetShortArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jshortArray(array), cBool(isCopy))
 }
 
-func (env Env) GetIntArrayElements(array JintArray, isCopy byte) *C.int {
-	return C.GetIntArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jintArray(array), C.jboolean(isCopy))
+func (env Env) GetIntArrayElements(array JintArray, isCopy bool) unsafe.Pointer {
+	return unsafe.Pointer(C.GetIntArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jintArray(array), cBool(isCopy)))
 }
 
-func (env Env) GetLongArrayElements(array JlongArray, isCopy byte) *C.long {
-	return C.GetLongArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jlongArray(array), C.jboolean(isCopy))
+func (env Env) GetLongArrayElements(array JlongArray, isCopy bool) *C.long {
+	return C.GetLongArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jlongArray(array), cBool(isCopy))
 }
 
-func (env Env) GetFloatArrayElements(array JfloatArray, isCopy byte) *C.float {
-	return C.GetFloatArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jfloatArray(array), C.jboolean(isCopy))
+func (env Env) GetFloatArrayElements(array JfloatArray, isCopy bool) *C.float {
+	return C.GetFloatArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jfloatArray(array), cBool(isCopy))
 }
 
-func (env Env) GetDoubleArrayElements(array JbooleanArray, isCopy byte) *C.double {
-	return C.GetDoubleArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jdoubleArray(array), C.jboolean(isCopy))
+func (env Env) GetDoubleArrayElements(array JbooleanArray, isCopy bool) *C.double {
+	return C.GetDoubleArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jdoubleArray(array), cBool(isCopy))
 }
 
-func (env Env) GetByteArrayElements(array Jarray, isCopy byte) *C.schar {
-	return C.GetByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), C.jboolean(isCopy))
+func (env Env) GetByteArrayElements(array Jarray, isCopy bool) *C.schar {
+	return C.GetByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), cBool(isCopy))
 }
 
 func (env Env) ReleaseBooleanArrayElements(array JbooleanArray, elems uintptr, mode int) {
