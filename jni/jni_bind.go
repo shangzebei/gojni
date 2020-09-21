@@ -588,6 +588,70 @@ static inline jint RegisterNatives(JNIEnv * env,jclass clazz, const JNINativeMet
 	//printf("name = %s sig = %s len = %d ptr =%d \n",methods[0].name,methods[0].signature,nMethods,methods[0].fnPtr);
 	return (*env)->RegisterNatives(env,clazz, methods,nMethods);
 }
+///////////////////////////////////////////////jniArrayElements////////////////////////////////////////////
+jboolean* GetBooleanArrayElements(JNIEnv* env, jbooleanArray array, jboolean isCopy) {
+	return (*env)->GetBooleanArrayElements (env, array, &isCopy);
+}
+
+jbyte* GetByteArrayElements(JNIEnv* env, jbyteArray array, jboolean isCopy) {
+	return (*env)->GetByteArrayElements (env, array, &isCopy);
+}
+
+jchar* GetCharArrayElements(JNIEnv* env, jcharArray array, jboolean isCopy) {
+	return (*env)->GetCharArrayElements (env, array, &isCopy);
+}
+
+jshort* GetShortArrayElements(JNIEnv* env, jshortArray array, jboolean isCopy) {
+	return (*env)->GetShortArrayElements (env, array, &isCopy);
+}
+
+jint* GetIntArrayElements(JNIEnv* env, jintArray array, jboolean isCopy) {
+	return (*env)->GetIntArrayElements (env, array, &isCopy);
+}
+
+jlong* GetLongArrayElements(JNIEnv* env, jlongArray array, jboolean isCopy) {
+	return (*env)->GetLongArrayElements (env, array, &isCopy);
+}
+
+jfloat* GetFloatArrayElements(JNIEnv* env, jfloatArray array, jboolean isCopy) {
+	return (*env)->GetFloatArrayElements (env, array, &isCopy);
+}
+
+jdouble* GetDoubleArrayElements(JNIEnv* env, jdoubleArray array, jboolean isCopy) {
+	return (*env)->GetDoubleArrayElements (env, array, &isCopy);
+}
+
+void ReleaseBooleanArrayElements(JNIEnv* env, jbooleanArray array, jboolean* elems, jint mode) {
+	(*env)->ReleaseBooleanArrayElements (env, array, elems, mode);
+}
+
+void ReleaseByteArrayElements(JNIEnv* env, jbyteArray array, jbyte* elems, jint mode) {
+	(*env)->ReleaseByteArrayElements (env, array, elems, mode);
+}
+
+void ReleaseCharArrayElements(JNIEnv* env, jcharArray array, jchar* elems, jint mode) {
+	(*env)->ReleaseCharArrayElements (env, array, elems, mode);
+}
+
+void ReleaseShortArrayElements(JNIEnv* env, jshortArray array, jshort* elems, jint mode) {
+	(*env)->ReleaseShortArrayElements (env, array, elems, mode);
+}
+
+void ReleaseIntArrayElements(JNIEnv* env, jintArray array, jint* elems, jint mode) {
+	(*env)->ReleaseIntArrayElements (env, array, elems, mode);
+}
+
+void ReleaseLongArrayElements(JNIEnv* env, jlongArray array, jlong* elems, jint mode) {
+	(*env)->ReleaseLongArrayElements (env, array, elems, mode);
+}
+
+void ReleaseFloatArrayElements(JNIEnv* env, jfloatArray array, jfloat* elems, jint mode) {
+	(*env)->ReleaseFloatArrayElements (env, array, elems, mode);
+}
+
+void ReleaseDoubleArrayElements(JNIEnv* env, jdoubleArray array, jdouble* elems, jint mode) {
+	(*env)->ReleaseDoubleArrayElements (env, array, elems, mode);
+}
 */
 import "C"
 import (
@@ -706,6 +770,73 @@ func (env Env) GetStringUTF(ptr Jstring) []byte {
 	C.GetStringUTFRegion((*C.JNIEnv)(unsafe.Pointer(env)), jstr, C.jsize(0), C.GetStringLength((*C.JNIEnv)(unsafe.Pointer(env)), jstr), cmem(ret))
 	return ret
 }
+
+//////////////////////////////////////////////ArrayElements/////////////////////////////////////////////////////////////
+func (env Env) GetBooleanArrayElements(array Jarray, isCopy byte) *C.uchar {
+	return C.GetBooleanArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbooleanArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) GetCharArrayElements(array JcharArray, isCopy byte) *C.ushort {
+	return C.GetCharArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jcharArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) GetShortArrayElements(array JshortArray, isCopy byte) *C.short {
+	return C.GetShortArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jshortArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) GetIntArrayElements(array JintArray, isCopy byte) *C.int {
+	return C.GetIntArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jintArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) GetLongArrayElements(array JlongArray, isCopy byte) *C.long {
+	return C.GetLongArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jlongArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) GetFloatArrayElements(array JfloatArray, isCopy byte) *C.float {
+	return C.GetFloatArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jfloatArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) GetDoubleArrayElements(array JbooleanArray, isCopy byte) *C.double {
+	return C.GetDoubleArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jdoubleArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) GetByteArrayElements(array Jarray, isCopy byte) *C.schar {
+	return C.GetByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), C.jboolean(isCopy))
+}
+
+func (env Env) ReleaseBooleanArrayElements(array JbooleanArray, elems uintptr, mode int) {
+	C.ReleaseBooleanArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbooleanArray(array), (*C.jboolean)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+func (env Env) ReleaseByteArrayElements(array JbyteArray, elems uintptr, mode int) {
+	C.ReleaseByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), (*C.jbyte)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+func (env Env) ReleaseCharArrayElements(array JcharArray, elems uintptr, mode int) {
+	C.ReleaseCharArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jcharArray(array), (*C.jchar)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+func (env Env) ReleaseShortArrayElements(array JshortArray, elems uintptr, mode int) {
+	C.ReleaseShortArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jshortArray(array), (*C.jshort)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+func (env Env) ReleaseIntArrayElements(array JintArray, elems uintptr, mode int) {
+	C.ReleaseIntArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jintArray(array), (*C.jint)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+func (env Env) ReleaseLongArrayElements(array JlongArray, elems uintptr, mode int) {
+	C.ReleaseLongArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jlongArray(array), (*C.jlong)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+func (env Env) ReleaseFloatArrayElements(array JfloatArray, elems uintptr, mode int) {
+	C.ReleaseFloatArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jfloatArray(array), (*C.jfloat)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+func (env Env) ReleaseDoubleArrayElements(array JdoubleArray, elems uintptr, mode int) {
+	C.ReleaseDoubleArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jdoubleArray(array), (*C.jdouble)(unsafe.Pointer(elems)), C.int(mode))
+}
+
+//////////////////////////////////////////////ArrayElements/////////////////////////////////////////////////////////////
 
 func (env Env) NewDirectByteBuffer(address unsafe.Pointer, capacity int) Jobject {
 	return Jobject(C.NewDirectByteBuffer((*C.JNIEnv)(unsafe.Pointer(env)), address, C.jlong(capacity)))

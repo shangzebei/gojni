@@ -1,6 +1,7 @@
 package jni
 
 /*
+#define __USE_GNU
 #include <jni.h>
 #include <stdlib.h>
 #include <pthread.h>
@@ -36,9 +37,9 @@ static JNIEnv *go_seq_get_thread_env(void) {
 }
 
 static void init(JavaVM *j){
-     Dl_info dl_info;
-     dladdr((void *)init, &dl_info);
-     fprintf(stderr, "module %s loaded\n", dl_info.dli_fname);
+    //  Dl_info dl_info;
+    //  dladdr((void *)init, &dl_info);
+    //  fprintf(stderr, "module %s loaded\n", dl_info.dli_fname);
      jvm = j;
 	 if (pthread_key_create(&jnienvs, env_destructor) != 0) {
 	   LOG_FATAL("failed to initialize jnienvs thread local storage");
