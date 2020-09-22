@@ -24,7 +24,7 @@ var JMethodMap = map[string]string{
 	"B": "Byte",
 	"C": "Char",
 	"S": "Short",
-	"J": "Float",
+	"J": "Long",
 	"F": "Float",
 	"D": "Double",
 	"V": "Void",

@@ -414,10 +414,22 @@ func convertSlice(env jni.Env, Array reflect.Type, p uintptr) reflect.Value {
 	ilen := env.GetArrayLength(p)
 	item := Array.Elem()
 	switch item.Kind() {
+	case reflect.Int:
+		itypes := int(unsafe.Sizeof(C.long(0)))
+		jbytes := ilen * itypes
+		ptr := env.GetLongArrayElements(p, true)
+		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		env.ReleaseLongArrayElements(p, uintptr(ptr), 0)
+		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
+		head.Cap /= itypes
+		head.Len /= itypes
+		return reflect.ValueOf(*(*[]int)(unsafe.Pointer(head)))
 	case reflect.Int32:
 		itypes := int(unsafe.Sizeof(C.int(0)))
 		jbytes := ilen * itypes
-		reBytes := C.GoBytes(env.GetIntArrayElements(p, true), C.int(jbytes))
+		ptr := env.GetIntArrayElements(p, true)
+		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		env.ReleaseIntArrayElements(p, uintptr(ptr), 0)
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
 		head.Cap /= itypes
 		head.Len /= itypes
@@ -431,11 +443,33 @@ func convertSlice(env jni.Env, Array reflect.Type, p uintptr) reflect.Value {
 	case reflect.Uint8:
 		itypes := 1
 		jbytes := ilen * itypes
-		reBytes := C.GoBytes(env.GetByteArrayElements(p, true), C.int(jbytes))
+		ptr := env.GetByteArrayElements(p, true)
+		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		env.ReleaseByteArrayElements(p, uintptr(ptr), 0)
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
 		head.Cap /= itypes
 		head.Len /= itypes
 		return reflect.ValueOf(*(*[]byte)(unsafe.Pointer(head)))
+	case reflect.Float32:
+		itypes := int(unsafe.Sizeof(C.float(0.0)))
+		jbytes := ilen * itypes
+		ptr := env.GetFloatArrayElements(p, true)
+		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		env.ReleaseFloatArrayElements(p, uintptr(ptr), 0)
+		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
+		head.Cap /= itypes
+		head.Len /= itypes
+		return reflect.ValueOf(*(*[]float32)(unsafe.Pointer(head)))
+	case reflect.Float64:
+		itypes := int(unsafe.Sizeof(C.double(0.0)))
+		jbytes := ilen * itypes
+		ptr := env.GetDoubleArrayElements(p, true)
+		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		env.ReleaseDoubleArrayElements(p, uintptr(ptr), 0)
+		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
+		head.Cap /= itypes
+		head.Len /= itypes
+		return reflect.ValueOf(*(*[]float64)(unsafe.Pointer(head)))
 	default:
 		panic(fmt.Sprintf("not support Array %s ", item))
 	}

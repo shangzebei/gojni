@@ -170,6 +170,9 @@ var checkMap = map[string]reflect.Type{
 	"[I":                  reflect.TypeOf([]int32{}),
 	"[Ljava/lang/String;": reflect.TypeOf([]string{}),
 	"[B":                  reflect.TypeOf([]byte{}),
+	"[J":                  reflect.TypeOf([]int{}),
+	"[F":                  reflect.TypeOf([]float32{}),
+	"[D":                  reflect.TypeOf([]float64{}),
 }
 
 func (n *native) checkType(i int, mName string, def string, jsig string, gTyp reflect.Type) {
@@ -177,8 +180,8 @@ func (n *native) checkType(i int, mName string, def string, jsig string, gTyp re
 		// fmt.Println(jsig, gTyp)
 		if v, b := checkMap[jsig]; !b || v != gTyp {
 			if b {
-				panic(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmay %s ==> %s",
-					n.sCls, mName, def, i, gTyp, jsig, v))
+				panic(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmust use go type ==> %s",
+					n.sCls, mName, def, i, gTyp, v))
 			} else {
 				panic(fmt.Sprintf("%s method %s definition { %s %d } sig %s not support", n.sCls, mName, def, i, jsig))
 			}

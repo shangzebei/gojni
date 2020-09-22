@@ -812,35 +812,35 @@ func (env Env) GetByteArrayElements(array Jarray, isCopy bool) unsafe.Pointer {
 	return unsafe.Pointer(C.GetByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), cBool(isCopy)))
 }
 
-func (env Env) ReleaseBooleanArrayElements(array JbooleanArray, elems uintptr, mode int) {
+func (env Env) ReleaseBooleanArrayElements(array JbooleanArray, elems uintptr, mode int32) {
 	C.ReleaseBooleanArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbooleanArray(array), (*C.jboolean)(unsafe.Pointer(elems)), C.int(mode))
 }
 
-func (env Env) ReleaseByteArrayElements(array JbyteArray, elems uintptr, mode int) {
+func (env Env) ReleaseByteArrayElements(array JbyteArray, elems uintptr, mode int32) {
 	C.ReleaseByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), (*C.jbyte)(unsafe.Pointer(elems)), C.int(mode))
 }
 
-func (env Env) ReleaseCharArrayElements(array JcharArray, elems uintptr, mode int) {
+func (env Env) ReleaseCharArrayElements(array JcharArray, elems uintptr, mode int32) {
 	C.ReleaseCharArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jcharArray(array), (*C.jchar)(unsafe.Pointer(elems)), C.int(mode))
 }
 
-func (env Env) ReleaseShortArrayElements(array JshortArray, elems uintptr, mode int) {
+func (env Env) ReleaseShortArrayElements(array JshortArray, elems uintptr, mode int32) {
 	C.ReleaseShortArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jshortArray(array), (*C.jshort)(unsafe.Pointer(elems)), C.int(mode))
 }
 
-func (env Env) ReleaseIntArrayElements(array JintArray, elems uintptr, mode int) {
+func (env Env) ReleaseIntArrayElements(array JintArray, elems uintptr, mode int32) {
 	C.ReleaseIntArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jintArray(array), (*C.jint)(unsafe.Pointer(elems)), C.int(mode))
 }
 
-func (env Env) ReleaseLongArrayElements(array JlongArray, elems uintptr, mode int) {
+func (env Env) ReleaseLongArrayElements(array JlongArray, elems uintptr, mode int32) {
 	C.ReleaseLongArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jlongArray(array), (*C.jlong)(unsafe.Pointer(elems)), C.int(mode))
 }
 
-func (env Env) ReleaseFloatArrayElements(array JfloatArray, elems uintptr, mode int) {
+func (env Env) ReleaseFloatArrayElements(array JfloatArray, elems uintptr, mode int32) {
 	C.ReleaseFloatArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jfloatArray(array), (*C.jfloat)(unsafe.Pointer(elems)), C.int(mode))
 }
 
-func (env Env) ReleaseDoubleArrayElements(array JdoubleArray, elems uintptr, mode int) {
+func (env Env) ReleaseDoubleArrayElements(array JdoubleArray, elems uintptr, mode int32) {
 	C.ReleaseDoubleArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jdoubleArray(array), (*C.jdouble)(unsafe.Pointer(elems)), C.int(mode))
 }
 

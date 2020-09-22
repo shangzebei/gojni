@@ -5,7 +5,7 @@ package jni
 #include <jni.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <dlfcn.h>
+//#include <dlfcn.h>
 static JavaVM *jvm;
 static pthread_key_t jnienvs;
 
