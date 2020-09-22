@@ -589,69 +589,69 @@ static inline jint RegisterNatives(JNIEnv * env,jclass clazz, const JNINativeMet
 	return (*env)->RegisterNatives(env,clazz, methods,nMethods);
 }
 ///////////////////////////////////////////////jniArrayElements////////////////////////////////////////////
-jboolean* GetBooleanArrayElements(JNIEnv* env, jbooleanArray array, jboolean isCopy) {
-	return (*env)->GetBooleanArrayElements (env, array, &isCopy);
-}
+static inline jboolean* GetBooleanArrayElements(JNIEnv* env, jbooleanArray array, jboolean isCopy) {
+ 	return (*env)->GetBooleanArrayElements (env, array, &isCopy);
+ }
 
-jbyte* GetByteArrayElements(JNIEnv* env, jbyteArray array, jboolean isCopy) {
-	return (*env)->GetByteArrayElements (env, array, &isCopy);
-}
+static inline jbyte* GetByteArrayElements(JNIEnv* env, jbyteArray array, jboolean isCopy) {
+ 	return (*env)->GetByteArrayElements (env, array, &isCopy);
+ }
 
-jchar* GetCharArrayElements(JNIEnv* env, jcharArray array, jboolean isCopy) {
-	return (*env)->GetCharArrayElements (env, array, &isCopy);
-}
+static inline jchar* GetCharArrayElements(JNIEnv* env, jcharArray array, jboolean isCopy) {
+ 	return (*env)->GetCharArrayElements (env, array, &isCopy);
+ }
 
-jshort* GetShortArrayElements(JNIEnv* env, jshortArray array, jboolean isCopy) {
-	return (*env)->GetShortArrayElements (env, array, &isCopy);
-}
+static inline jshort* GetShortArrayElements(JNIEnv* env, jshortArray array, jboolean isCopy) {
+ 	return (*env)->GetShortArrayElements (env, array, &isCopy);
+ }
 
-jint* GetIntArrayElements(JNIEnv* env, jintArray array, jboolean isCopy) {
-	return (*env)->GetIntArrayElements (env, array, &isCopy);
-}
+static inline jint* GetIntArrayElements(JNIEnv* env, jintArray array, jboolean isCopy) {
+ 	return (*env)->GetIntArrayElements (env, array, &isCopy);
+ }
 
-jlong* GetLongArrayElements(JNIEnv* env, jlongArray array, jboolean isCopy) {
+static inline jlong* GetLongArrayElements(JNIEnv* env, jlongArray array, jboolean isCopy) {
 	return (*env)->GetLongArrayElements (env, array, &isCopy);
-}
+ }
 
-jfloat* GetFloatArrayElements(JNIEnv* env, jfloatArray array, jboolean isCopy) {
+static inline jfloat* GetFloatArrayElements(JNIEnv* env, jfloatArray array, jboolean isCopy) {
 	return (*env)->GetFloatArrayElements (env, array, &isCopy);
-}
+ }
 
-jdouble* GetDoubleArrayElements(JNIEnv* env, jdoubleArray array, jboolean isCopy) {
+static inline jdouble* GetDoubleArrayElements(JNIEnv* env, jdoubleArray array, jboolean isCopy) {
 	return (*env)->GetDoubleArrayElements (env, array, &isCopy);
 }
 
-void ReleaseBooleanArrayElements(JNIEnv* env, jbooleanArray array, jboolean* elems, jint mode) {
+static inline void ReleaseBooleanArrayElements(JNIEnv* env, jbooleanArray array, jboolean* elems, jint mode) {
 	(*env)->ReleaseBooleanArrayElements (env, array, elems, mode);
 }
 
-void ReleaseByteArrayElements(JNIEnv* env, jbyteArray array, jbyte* elems, jint mode) {
+static inline void ReleaseByteArrayElements(JNIEnv* env, jbyteArray array, jbyte* elems, jint mode) {
 	(*env)->ReleaseByteArrayElements (env, array, elems, mode);
 }
 
-void ReleaseCharArrayElements(JNIEnv* env, jcharArray array, jchar* elems, jint mode) {
+static inline void ReleaseCharArrayElements(JNIEnv* env, jcharArray array, jchar* elems, jint mode) {
 	(*env)->ReleaseCharArrayElements (env, array, elems, mode);
 }
 
-void ReleaseShortArrayElements(JNIEnv* env, jshortArray array, jshort* elems, jint mode) {
+static inline void ReleaseShortArrayElements(JNIEnv* env, jshortArray array, jshort* elems, jint mode) {
 	(*env)->ReleaseShortArrayElements (env, array, elems, mode);
 }
 
-void ReleaseIntArrayElements(JNIEnv* env, jintArray array, jint* elems, jint mode) {
+static inline void ReleaseIntArrayElements(JNIEnv* env, jintArray array, jint* elems, jint mode) {
 	(*env)->ReleaseIntArrayElements (env, array, elems, mode);
 }
 
-void ReleaseLongArrayElements(JNIEnv* env, jlongArray array, jlong* elems, jint mode) {
+static inline void ReleaseLongArrayElements(JNIEnv* env, jlongArray array, jlong* elems, jint mode) {
 	(*env)->ReleaseLongArrayElements (env, array, elems, mode);
 }
 
-void ReleaseFloatArrayElements(JNIEnv* env, jfloatArray array, jfloat* elems, jint mode) {
+static inline void ReleaseFloatArrayElements(JNIEnv* env, jfloatArray array, jfloat* elems, jint mode) {
 	(*env)->ReleaseFloatArrayElements (env, array, elems, mode);
 }
 
-void ReleaseDoubleArrayElements(JNIEnv* env, jdoubleArray array, jdouble* elems, jint mode) {
-	(*env)->ReleaseDoubleArrayElements (env, array, elems, mode);
-}
+static inline void ReleaseDoubleArrayElements(JNIEnv* env, jdoubleArray array, jdouble* elems, jint mode) {
+ 	(*env)->ReleaseDoubleArrayElements (env, array, elems, mode);
+ }
 */
 import "C"
 import (
@@ -813,35 +813,35 @@ func (env Env) GetByteArrayElements(array Jarray, isCopy bool) unsafe.Pointer {
 }
 
 func (env Env) ReleaseBooleanArrayElements(array JbooleanArray, elems uintptr, mode int32) {
-	C.ReleaseBooleanArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbooleanArray(array), (*C.jboolean)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseBooleanArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbooleanArray(array), (*C.jboolean)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 func (env Env) ReleaseByteArrayElements(array JbyteArray, elems uintptr, mode int32) {
-	C.ReleaseByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), (*C.jbyte)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseByteArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jbyteArray(array), (*C.jbyte)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 func (env Env) ReleaseCharArrayElements(array JcharArray, elems uintptr, mode int32) {
-	C.ReleaseCharArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jcharArray(array), (*C.jchar)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseCharArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jcharArray(array), (*C.jchar)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 func (env Env) ReleaseShortArrayElements(array JshortArray, elems uintptr, mode int32) {
-	C.ReleaseShortArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jshortArray(array), (*C.jshort)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseShortArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jshortArray(array), (*C.jshort)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 func (env Env) ReleaseIntArrayElements(array JintArray, elems uintptr, mode int32) {
-	C.ReleaseIntArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jintArray(array), (*C.jint)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseIntArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jintArray(array), (*C.jint)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 func (env Env) ReleaseLongArrayElements(array JlongArray, elems uintptr, mode int32) {
-	C.ReleaseLongArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jlongArray(array), (*C.jlong)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseLongArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jlongArray(array), (*C.jlong)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 func (env Env) ReleaseFloatArrayElements(array JfloatArray, elems uintptr, mode int32) {
-	C.ReleaseFloatArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jfloatArray(array), (*C.jfloat)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseFloatArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jfloatArray(array), (*C.jfloat)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 func (env Env) ReleaseDoubleArrayElements(array JdoubleArray, elems uintptr, mode int32) {
-	C.ReleaseDoubleArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jdoubleArray(array), (*C.jdouble)(unsafe.Pointer(elems)), C.int(mode))
+	C.ReleaseDoubleArrayElements((*C.JNIEnv)(unsafe.Pointer(env)), C.jdoubleArray(array), (*C.jdouble)(unsafe.Pointer(elems)), C.jint(mode))
 }
 
 //////////////////////////////////////////////ArrayElements/////////////////////////////////////////////////////////////
