@@ -2,12 +2,13 @@ package jnivm
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/jni"
-	"gitee.com/aifuturewell/gojni/jparser"
-	"gitee.com/aifuturewell/gojni/utils"
 	"log"
 	"reflect"
 	"strings"
+
+	"gitee.com/aifuturewell/gojni/jni"
+	"gitee.com/aifuturewell/gojni/jparser"
+	"gitee.com/aifuturewell/gojni/utils"
 )
 
 type VM struct {
@@ -70,7 +71,7 @@ func (vm *VM) call(c *jparser.Call) {
 	}
 
 	sig := "Object"
-	if s, b := utils.SV[c.Method.Sig.RetTyp]; b {
+	if s, b := utils.JMethodMap[c.Method.Sig.RetTyp]; b {
 		sig = s
 	}
 

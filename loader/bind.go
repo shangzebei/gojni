@@ -73,11 +73,12 @@ package loader
 import "C"
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/jni"
-	"gitee.com/aifuturewell/gojni/utils"
 	"reflect"
 	"strings"
 	"unsafe"
+
+	"gitee.com/aifuturewell/gojni/jni"
+	"gitee.com/aifuturewell/gojni/utils"
 )
 
 type native struct {
@@ -149,6 +150,7 @@ func (n *native) BindNative(methodName string, def string, fun interface{}) *nat
 	code := fmt.Sprintf("%s%d", string(byte(dep+97)), index)
 	var _args []args
 	for i := 0; i < goF.NumIn(); i++ {
+		n.checkType(i, methodName, def, ms.ParamTyp[i], goF.In(i))
 		_args = append(_args, args{
 			jSig: ms.ParamTyp[i],
 			gSig: goF.In(i),
@@ -162,6 +164,27 @@ func (n *native) BindNative(methodName string, def string, fun interface{}) *nat
 	n.natives = append(n.natives, jni.JNINativeMethod{Name: methodName, Sig: ms.Sig, FnPtr: cf})
 	statistics[index] += 1
 	return n
+}
+
+var checkMap = map[string]reflect.Type{
+	"[I":                  reflect.TypeOf([]int32{}),
+	"[Ljava/lang/String;": reflect.TypeOf([]string{}),
+	"[B":                  reflect.TypeOf([]byte{}),
+}
+
+func (n *native) checkType(i int, mName string, def string, jsig string, gTyp reflect.Type) {
+	if gTyp.Kind() == reflect.Slice {
+		// fmt.Println(jsig, gTyp)
+		if v, b := checkMap[jsig]; !b || v != gTyp {
+			if b {
+				panic(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmay %s ==> %s",
+					n.sCls, mName, def, i, gTyp, jsig, v))
+			} else {
+				panic(fmt.Sprintf("%s method %s definition { %s %d } sig %s not support", n.sCls, mName, def, i, jsig))
+			}
+
+		}
+	}
 }
 
 func (n *native) Done() {

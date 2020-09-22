@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+//jni sig
 var SigMap = map[string]string{
 	"int":     "I",
 	"boolean": "Z",
@@ -17,7 +18,7 @@ var SigMap = map[string]string{
 	"void":    "V",
 }
 
-var SV = map[string]string{
+var JMethodMap = map[string]string{
 	"I": "Int",
 	"Z": "Boolean",
 	"B": "Byte",
@@ -69,27 +70,20 @@ func GetSig(oSig string) *MethodSig { //(I)V
 		//l := len(kk) - 1
 		for i := 0; i < len(kk); i++ {
 			value := kk[i]
-			isArray := false
+			temp := ""
 			if strings.Contains(value, "[]") {
-				inputV = "["
+				temp = "["
 				value = strings.ReplaceAll(value, "[]", "")
-				isArray = true
 			}
 			if v, b := SigMap[value]; b {
-				if isArray {
-					m.ParamTyp = append(m.ParamTyp, "["+v)
-				} else {
-					m.ParamTyp = append(m.ParamTyp, v)
-				}
-				inputV += v
-				//if i != l {
-				//	inputV += ","
-				//}
+				temp += v
 			} else {
 				s := strings.ReplaceAll(value, ".", "/") + ";"
-				inputV += "L" + s
-				m.ParamTyp = append(m.ParamTyp, s)
+				temp += "L" + s
+
 			}
+			m.ParamTyp = append(m.ParamTyp, temp)
+			inputV += temp
 		}
 	}
 	m.Sig = fmt.Sprintf("(%s)%s", inputV, retV)

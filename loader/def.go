@@ -411,21 +411,32 @@ func convert(f method, params ...uintptr) []reflect.Value {
 }
 
 func convertSlice(env jni.Env, Array reflect.Type, p uintptr) reflect.Value {
+	ilen := env.GetArrayLength(p)
 	item := Array.Elem()
 	switch item.Kind() {
 	case reflect.Int32:
 		itypes := int(unsafe.Sizeof(C.int(0)))
-		ilen := env.GetArrayLength(p)
 		jbytes := ilen * itypes
 		reBytes := C.GoBytes(env.GetIntArrayElements(p, true), C.int(jbytes))
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
 		head.Cap /= itypes
 		head.Len /= itypes
 		return reflect.ValueOf(*(*[]int32)(unsafe.Pointer(head)))
+	case reflect.String:
+		var temp []string = make([]string, ilen)
+		for i := 0; i < ilen; i++ {
+			temp[i] = string(env.GetStringUTF(env.GetObjectArrayElement(p, i)))
+		}
+		return reflect.ValueOf(temp)
+	case reflect.Uint8:
+		itypes := 1
+		jbytes := ilen * itypes
+		reBytes := C.GoBytes(env.GetByteArrayElements(p, true), C.int(jbytes))
+		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
+		head.Cap /= itypes
+		head.Len /= itypes
+		return reflect.ValueOf(*(*[]byte)(unsafe.Pointer(head)))
 	default:
-		fmt.Println(unsafe.Sizeof(C.float(0)))
-		fmt.Println(unsafe.Sizeof(C.long(0)))
-		fmt.Println(unsafe.Sizeof(C.char(0)))
 		panic(fmt.Sprintf("not support Array %s ", item))
 	}
 	return reflect.Value{}
