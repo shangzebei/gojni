@@ -376,14 +376,30 @@ func g10(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 uintptr) uintptr {
 	return router("g10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
 }
 
+//in c type
 func router(s string, p ...uintptr) uintptr {
 	if f, b := _funcMapper[s]; b {
-		reflect.ValueOf(f.fn).Call(convert(f, p...))
+		rValues := reflect.ValueOf(f.fn).Call(convertParam(f, p...))
+		if len(rValues) != 1 {
+			return 0
+		}
+		return convertR(rValues[0])
 	}
 	return 0
 }
 
-func convert(f method, params ...uintptr) []reflect.Value {
+//TODO not impl
+func convertR(r reflect.Value) uintptr {
+	env := jni.AutoGetCurrentThreadEnv()
+	switch r.Type().Kind() {
+	case reflect.String:
+		return env.NewString(r.String())
+	default:
+		panic("convertR not support")
+	}
+}
+
+func convertParam(f method, params ...uintptr) []reflect.Value {
 	var ret []reflect.Value
 	lenP := len(params) - 2
 	env := jni.AutoGetCurrentThreadEnv()
@@ -404,7 +420,7 @@ func convert(f method, params ...uintptr) []reflect.Value {
 		case reflect.Slice:
 			ret = append(ret, convertSlice(env, s.gSig, p))
 		default:
-			panic("not support")
+			panic("convertParam not support")
 		}
 	}
 	return ret

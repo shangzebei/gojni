@@ -185,7 +185,6 @@ func (n *native) checkType(i int, mName string, def string, jsig string, gTyp re
 			} else {
 				panic(fmt.Sprintf("%s method %s definition { %s %d } sig %s not support", n.sCls, mName, def, i, jsig))
 			}
-
 		}
 	}
 }
