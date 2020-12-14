@@ -9,43 +9,6 @@ import (
 	"gitee.com/aifuturewell/gojni/jni"
 )
 
-//export a1
-func a1(p uintptr) uintptr {
-	return router("a1", p)
-}
-
-//export b1
-func b1(p uintptr) uintptr {
-	return router("b1", p)
-}
-
-//export c1
-func c1(p uintptr) uintptr {
-	return router("c1", p)
-}
-
-//export d1
-func d1(p uintptr) uintptr {
-	return router("d1", p)
-}
-
-//export e1
-func e1(p uintptr) uintptr {
-	return router("e1", p)
-}
-
-//export f1
-func f1(p uintptr) uintptr {
-	return router("f1", p)
-}
-
-//export g1
-func g1(p uintptr) uintptr {
-	return router("g1", p)
-}
-
-//############################################################################
-
 //export a2
 func a2(p1, p2 uintptr) uintptr {
 	return router("a2", p1, p2)
@@ -376,6 +339,86 @@ func g10(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 uintptr) uintptr {
 	return router("g10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10)
 }
 
+/////////////////////////////11/////////////////////////////////////
+//export a11
+func a11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+}
+
+//export b11
+func b11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+}
+
+//export c11
+func c11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+}
+
+//export d11
+func d11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+}
+
+//export e11
+func e11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+}
+
+//export f11
+func f11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+}
+
+//export g11
+func g11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+}
+
+////////////////////////////////////////////////////////////////////////
+//export a12
+func a12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+}
+
+//export b12
+func b12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+}
+
+//export c12
+func c12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+}
+
+//export d12
+func d12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+}
+
+//export e12
+func e12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+}
+
+//export f12
+func f12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+}
+
+//export g12
+func g12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
+	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+}
+
+////export a12
+//func a12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12 uintptr) uintptr {
+//	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12)
+//}
+////export a12
+//func a12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12 uintptr) uintptr {
+//	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12)
+//}
 //in c type
 func router(s string, p ...uintptr) uintptr {
 	if f, b := _funcMapper[s]; b {

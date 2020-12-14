@@ -1,6 +1,5 @@
 package loader
 
-//extern void* a1(void *);
 //extern void* a2(void *,void *);
 //extern void* a3(void *,void *,void *);
 //extern void* a4(void *,void *,void *,void *);
@@ -10,7 +9,8 @@ package loader
 //extern void* a8(void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* a9(void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* a10(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
-//extern void* b1(void *);
+//extern void* a11(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* a12(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* b2(void *,void *);
 //extern void* b3(void *,void *,void *);
 //extern void* b4(void *,void *,void *,void *);
@@ -20,7 +20,8 @@ package loader
 //extern void* b8(void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* b9(void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* b10(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
-//extern void* c1(void *);
+//extern void* b11(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* b12(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* c2(void *,void *);
 //extern void* c3(void *,void *,void *);
 //extern void* c4(void *,void *,void *,void *);
@@ -30,7 +31,8 @@ package loader
 //extern void* c8(void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* c9(void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* c10(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
-//extern void* d1(void *);
+//extern void* c11(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* c12(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* d2(void *,void *);
 //extern void* d3(void *,void *,void *);
 //extern void* d4(void *,void *,void *,void *);
@@ -40,7 +42,8 @@ package loader
 //extern void* d8(void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* d9(void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* d10(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
-//extern void* e1(void *);
+//extern void* d11(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* d12(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* e2(void *,void *);
 //extern void* e3(void *,void *,void *);
 //extern void* e4(void *,void *,void *,void *);
@@ -50,7 +53,8 @@ package loader
 //extern void* e8(void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* e9(void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* e10(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
-//extern void* f1(void *);
+//extern void* e11(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* e12(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* f2(void *,void *);
 //extern void* f3(void *,void *,void *);
 //extern void* f4(void *,void *,void *,void *);
@@ -60,7 +64,8 @@ package loader
 //extern void* f8(void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* f9(void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* f10(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
-//extern void* g1(void *);
+//extern void* f11(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* f12(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* g2(void *,void *);
 //extern void* g3(void *,void *,void *);
 //extern void* g4(void *,void *,void *,void *);
@@ -70,6 +75,8 @@ package loader
 //extern void* g8(void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* g9(void *,void *,void *,void *,void *,void *,void *,void *,void *);
 //extern void* g10(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* g11(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
+//extern void* g12(void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *,void *);
 import "C"
 import (
 	"fmt"
@@ -99,7 +106,6 @@ type args struct {
 }
 
 var NMap = map[int][]unsafe.Pointer{
-	1:  {C.a1, C.b1, C.c1, C.d1, C.e1, C.f1, C.g1},
 	2:  {C.a2, C.b2, C.c2, C.d2, C.e2, C.f2, C.g2},
 	3:  {C.a3, C.b3, C.c3, C.d3, C.e3, C.f3, C.g3},
 	4:  {C.a4, C.b4, C.c4, C.d4, C.e4, C.f4, C.g4},
@@ -109,6 +115,8 @@ var NMap = map[int][]unsafe.Pointer{
 	8:  {C.a8, C.b8, C.c8, C.d8, C.e8, C.f8, C.g8},
 	9:  {C.a9, C.b9, C.c9, C.d9, C.e9, C.f9, C.g9},
 	10: {C.a10, C.b10, C.c10, C.e10, C.f10, C.g10},
+	11: {C.a11, C.b11, C.c11, C.e11, C.f11, C.g11},
+	12: {C.a12, C.b12, C.c12, C.e12, C.f12, C.g12},
 }
 
 var _native *native
