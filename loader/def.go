@@ -383,25 +383,31 @@ func router(s string, p ...uintptr) uintptr {
 		if len(rValues) != 1 {
 			return 0
 		}
-		return convertR(rValues[0])
+		return convertReturn(rValues[0])
 	}
 	return 0
 }
 
 //TODO not impl
-func convertR(r reflect.Value) uintptr {
+func convertReturn(r reflect.Value) uintptr {
 	env := jni.AutoGetCurrentThreadEnv()
 	switch r.Type().Kind() {
 	case reflect.String:
 		return env.NewString(r.String())
+	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64,
+		reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		return uintptr(r.Int())
+	case reflect.Float32, reflect.Float64:
+		//fmt.Println(reflect.ValueOf(20.65).Addr().Pointer())
+		return uintptr(r.Float())
 	default:
-		panic("convertR not support")
+		panic(fmt.Sprintf("convertReturn not support type %s", r.Kind().String()))
 	}
 }
 
 func convertParam(f method, params ...uintptr) []reflect.Value {
 	var ret []reflect.Value
-	lenP := len(params) - 2
+	lenP := len(f.sig)
 	env := jni.AutoGetCurrentThreadEnv()
 	for i := 0; i < lenP; i++ {
 		s := f.sig[i]
@@ -418,7 +424,7 @@ func convertParam(f method, params ...uintptr) []reflect.Value {
 			pkg := string(env.GetStringUTF(p))
 			ret = append(ret, reflect.ValueOf(pkg))
 		case reflect.Slice:
-			ret = append(ret, convertSlice(env, s.gSig, p))
+			ret = append(ret, convertParamSlice(env, s.gSig, p))
 		default:
 			panic("convertParam not support")
 		}
@@ -426,65 +432,67 @@ func convertParam(f method, params ...uintptr) []reflect.Value {
 	return ret
 }
 
-func convertSlice(env jni.Env, Array reflect.Type, p uintptr) reflect.Value {
-	ilen := env.GetArrayLength(p)
+func convertParamSlice(env jni.Env, Array reflect.Type, p uintptr) reflect.Value {
+
+	iLen := env.GetArrayLength(p)
 	item := Array.Elem()
+
 	switch item.Kind() {
 	case reflect.Int:
-		itypes := int(unsafe.Sizeof(C.long(0)))
-		jbytes := ilen * itypes
+		iTypes := int(unsafe.Sizeof(C.long(0)))
+		jBytes := iLen * iTypes
 		ptr := env.GetLongArrayElements(p, true)
-		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		reBytes := C.GoBytes(ptr, C.int(jBytes))
 		env.ReleaseLongArrayElements(p, uintptr(ptr), 0)
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
-		head.Cap /= itypes
-		head.Len /= itypes
+		head.Cap /= iTypes
+		head.Len /= iTypes
 		return reflect.ValueOf(*(*[]int)(unsafe.Pointer(head)))
 	case reflect.Int32:
-		itypes := int(unsafe.Sizeof(C.int(0)))
-		jbytes := ilen * itypes
+		iTypes := int(unsafe.Sizeof(C.int(0)))
+		jBytes := iLen * iTypes
 		ptr := env.GetIntArrayElements(p, true)
-		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		reBytes := C.GoBytes(ptr, C.int(jBytes))
 		env.ReleaseIntArrayElements(p, uintptr(ptr), 0)
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
-		head.Cap /= itypes
-		head.Len /= itypes
+		head.Cap /= iTypes
+		head.Len /= iTypes
 		return reflect.ValueOf(*(*[]int32)(unsafe.Pointer(head)))
 	case reflect.String:
-		var temp []string = make([]string, ilen)
-		for i := 0; i < ilen; i++ {
+		var temp []string = make([]string, iLen)
+		for i := 0; i < iLen; i++ {
 			temp[i] = string(env.GetStringUTF(env.GetObjectArrayElement(p, i)))
 		}
 		return reflect.ValueOf(temp)
 	case reflect.Uint8:
-		itypes := 1
-		jbytes := ilen * itypes
+		iTypes := 1
+		jBytes := iLen * iTypes
 		ptr := env.GetByteArrayElements(p, true)
-		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		reBytes := C.GoBytes(ptr, C.int(jBytes))
 		env.ReleaseByteArrayElements(p, uintptr(ptr), 0)
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
-		head.Cap /= itypes
-		head.Len /= itypes
+		head.Cap /= iTypes
+		head.Len /= iTypes
 		return reflect.ValueOf(*(*[]byte)(unsafe.Pointer(head)))
 	case reflect.Float32:
-		itypes := int(unsafe.Sizeof(C.float(0.0)))
-		jbytes := ilen * itypes
+		iTypes := int(unsafe.Sizeof(C.float(0.0)))
+		jBytes := iLen * iTypes
 		ptr := env.GetFloatArrayElements(p, true)
-		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		reBytes := C.GoBytes(ptr, C.int(jBytes))
 		env.ReleaseFloatArrayElements(p, uintptr(ptr), 0)
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
-		head.Cap /= itypes
-		head.Len /= itypes
+		head.Cap /= iTypes
+		head.Len /= iTypes
 		return reflect.ValueOf(*(*[]float32)(unsafe.Pointer(head)))
 	case reflect.Float64:
-		itypes := int(unsafe.Sizeof(C.double(0.0)))
-		jbytes := ilen * itypes
+		iTypes := int(unsafe.Sizeof(C.double(0.0)))
+		jBytes := iLen * iTypes
 		ptr := env.GetDoubleArrayElements(p, true)
-		reBytes := C.GoBytes(ptr, C.int(jbytes))
+		reBytes := C.GoBytes(ptr, C.int(jBytes))
 		env.ReleaseDoubleArrayElements(p, uintptr(ptr), 0)
 		head := (*reflect.SliceHeader)(unsafe.Pointer(&reBytes))
-		head.Cap /= itypes
-		head.Len /= itypes
+		head.Cap /= iTypes
+		head.Len /= iTypes
 		return reflect.ValueOf(*(*[]float64)(unsafe.Pointer(head)))
 	default:
 		panic(fmt.Sprintf("not support Array %s ", item))

@@ -134,35 +134,45 @@ func Bind(cls string) *native {
 	return _native
 }
 
+func (n *native) getPFunc(inNum int) (int, int, string) {
+
+	if inNum >= MAX_INDEX {
+		panic(fmt.Sprintf("function param overflow max %d numIN %d", MAX_INDEX, inNum))
+	}
+	dep := statistics[inNum]
+	if dep >= MAX_DEP {
+		inNum++
+		return n.getPFunc(inNum)
+	}
+	code := fmt.Sprintf("%c%d", dep+97, inNum)
+	return inNum, dep, code
+}
+
 func (n *native) BindNative(methodName string, def string, fun interface{}) *native {
 	jni.CheckNull(n.jCls, fmt.Sprintf("not find class %s", n.sCls))
 	ms := utils.GetSig(def)
 	//fmt.Println(ms.Sig)
-	index := len(ms.ParamTyp) + 2
+	inNum := len(ms.ParamTyp) + 2
 	goF := reflect.TypeOf(fun)
 	if len(ms.ParamTyp) != goF.NumIn() {
 		panic(fmt.Sprintf("method def not match fun %s %d", ms.ParamTyp, goF.NumIn()))
 	}
-	dep := statistics[index]
-	if index >= MAX_INDEX || dep >= MAX_DEP {
-		panic("function table overflow")
-	}
-	code := fmt.Sprintf("%s%d", string(byte(dep+97)), index)
-	var _args []args
+	newNum, dep, code := n.getPFunc(inNum)
+	var mArgs []args
 	for i := 0; i < goF.NumIn(); i++ {
 		n.checkType(i, methodName, def, ms.ParamTyp[i], goF.In(i))
-		_args = append(_args, args{
+		mArgs = append(mArgs, args{
 			jSig: ms.ParamTyp[i],
 			gSig: goF.In(i),
 		})
 	}
 	_funcMapper[code] = method{
 		fn:  fun,
-		sig: _args,
+		sig: mArgs,
 	}
-	cf := NMap[index][dep]
+	cf := NMap[newNum][dep]
 	n.natives = append(n.natives, jni.JNINativeMethod{Name: methodName, Sig: ms.Sig, FnPtr: cf})
-	statistics[index] += 1
+	statistics[newNum] += 1
 	return n
 }
 
@@ -191,6 +201,7 @@ func (n *native) checkType(i int, mName string, def string, jsig string, gTyp re
 
 func (n *native) Done() {
 	if n.env.RegisterNatives(n.jCls, n.natives) < 0 {
-		panic("RegisterNatives error")
+		fmt.Println(n.natives)
+		panic("RegisterNatives error \n please check java native define ")
 	}
 }

@@ -655,6 +655,7 @@ static inline void ReleaseDoubleArrayElements(JNIEnv* env, jdoubleArray array, j
 */
 import "C"
 import (
+	"fmt"
 	"unicode/utf16"
 	"unsafe"
 )
@@ -1508,6 +1509,10 @@ type JNINativeMethod struct {
 	Name  string
 	Sig   string
 	FnPtr unsafe.Pointer
+}
+
+func (j *JNINativeMethod) String() string {
+	return fmt.Sprintf("name %s sig %s", j.Name, j.Sig)
 }
 
 //jclass clazz, const JNINativeMethod* methods, jint nMethods
