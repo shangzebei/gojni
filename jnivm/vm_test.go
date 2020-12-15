@@ -13,3 +13,7 @@ func TestOjbHelp(t *testing.T) {
 	fmt.Println(o.Len())
 
 }
+
+func TestFloat(t *testing.T) {
+
+}

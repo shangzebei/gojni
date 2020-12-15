@@ -342,73 +342,73 @@ func g10(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 uintptr) uintptr {
 /////////////////////////////11/////////////////////////////////////
 //export a11
 func a11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+	return router("a11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
 //export b11
 func b11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+	return router("b11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
 //export c11
 func c11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+	return router("c11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
 //export d11
 func d11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+	return router("d11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
 //export e11
 func e11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+	return router("e11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
 //export f11
 func f11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+	return router("f11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
 //export g11
 func g11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
+	return router("g11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
 ////////////////////////////////////////////////////////////////////////
 //export a12
 func a12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+	return router("a12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
 //export b12
 func b12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+	return router("b12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
 //export c12
 func c12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+	return router("c12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
 //export d12
 func d12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+	return router("d12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
 //export e12
 func e12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+	return router("e12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
 //export f12
 func f12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+	return router("f12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
 //export g12
 func g12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
-	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
+	return router("g12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
 ////export a12
@@ -421,6 +421,11 @@ func g12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
 //}
 //in c type
 func router(s string, p ...uintptr) uintptr {
+	defer func() {
+		if r := recover(); r != nil {
+			jni.ThrowException(r.(error).Error())
+		}
+	}()
 	if f, b := _funcMapper[s]; b {
 		rValues := reflect.ValueOf(f.fn).Call(convertParam(f, p...))
 		if len(rValues) != 1 {
@@ -460,13 +465,19 @@ func convertParam(f method, params ...uintptr) []reflect.Value {
 			ret = append(ret, reflect.ValueOf(int(p)))
 		case reflect.Int64:
 			ret = append(ret, reflect.ValueOf(int64(p)))
-		case reflect.Float32, reflect.Float64:
+		case reflect.Float32:
+			//FIXME Float32
+			//fmt.Println("float = ", (C.float)(unsafe.Pointer(p)))
+			ret = append(ret, reflect.ValueOf(float32(p)))
+		case reflect.Float64:
+			//FIXME float64
 			ret = append(ret, reflect.ValueOf(float64(p)))
 		case reflect.String:
 			jni.CheckNull(p, "jni input str is null")
 			pkg := string(env.GetStringUTF(p))
 			ret = append(ret, reflect.ValueOf(pkg))
 		case reflect.Slice:
+			jni.CheckNull(p, "jni input slice is null")
 			ret = append(ret, convertParamSlice(env, s.gSig, p))
 		default:
 			panic("convertParam not support")
