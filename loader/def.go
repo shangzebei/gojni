@@ -426,7 +426,7 @@ func router(s string, p ...uintptr) uintptr {
 			jni.ThrowException(r.(error).Error())
 		}
 	}()
-	if f, b := _funcMapper[s]; b {
+	if f, b := fMappers[s]; b {
 		rValues := reflect.ValueOf(f.fn).Call(convertParam(f, p...))
 		if len(rValues) != 1 {
 			return 0

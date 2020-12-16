@@ -5,13 +5,13 @@ import (
 	"gitee.com/aifuturewell/gojni/jni"
 )
 
-var _onLoad []func(vm uintptr)
-var _onUnLoad []func(vm uintptr)
+var onLoads []func(vm uintptr)
+var onUnLoads []func(vm uintptr)
 
 //export JNI_OnLoad
 func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 	jni.InitJNI(vm)
-	for _, f := range _onLoad {
+	for _, f := range onLoads {
 		f(vm)
 	}
 	if _, v := jni.VM(vm).GetEnv(jni.JNI_VERSION_1_6); v != jni.JNI_OK {
@@ -23,15 +23,15 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 
 //export JNI_OnUnload
 func JNI_OnUnload(vm uintptr, reserved uintptr) {
-	for _, f := range _onUnLoad {
+	for _, f := range onUnLoads {
 		f(vm)
 	}
 }
 
 func OnLoad(f func(vm uintptr)) {
-	_onLoad = append(_onLoad, f)
+	onLoads = append(onLoads, f)
 }
 
 func OnUnload(f func(vm uintptr)) {
-	_onUnLoad = append(_onUnLoad, f)
+	onUnLoads = append(onUnLoads, f)
 }

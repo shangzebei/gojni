@@ -1,66 +1,47 @@
-### use
-
+### quick start
+#### in go 
 ```go
 package main
-
 import (
 	"fmt"
 	"unsafe"
-
 	"gitee.com/aifuturewell/gojni/loader"
 )
-
-func main() {
-
-}
-
+func main() {}
 func init() {
 	loader.OnLoad(func(vm uintptr) {
-		loader.Bind("com.szb.Hello").
-			BindNative("stop", "void()", show).
-			BindNative("args", "void(int[])", arg).
+		loader.WithClass("com.nk.Hello").
 			BindNative("nice", "void(java.lang.String[])", nice).
-			BindNative("bb", "void(byte[])", bys).
-			BindNative("llll", "void(long[])", lllll).
-			BindNative("fff", "void(float[])", fff).
-			BindNative("ddd", "void(double[])", ddd).
 			Done()
 	})
-}
-
-func lllll(l []int) {
-	fmt.Println(l)
-}
-
-func show() {
-	fmt.Println("go show")
-}
-
-func arg(a []int32) {
-	fmt.Println(unsafe.Sizeof(int(0)))
-	fmt.Println("go out ", a[1])
 }
 
 func nice(ss []string) {
 	fmt.Println(ss)
 }
+```
+#### in java
+```java
+package com.nk;
 
-func bys(bb []byte) {
-	fmt.Println(bb)
-}
-
-func fff(tt []float32) {
-	fmt.Println(tt)
-}
-
-func ddd(ddd []float64) {
-	fmt.Println(ddd)
+public class Hello {
+    static {
+        System.loadLibrary("test");
+    }
+    public static void main(String[] args) {
+        nice(new String[] { "come", "from", "gojni" });
+    }
+    public static native void nice(String[] sss);
 }
 ```
-### build
+### build and run
 ```
-CGO_CFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux" go build -tags 'jni' -buildmode=c-shared -o miner.so
+CGO_CFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux" go build -buildmode=c-shared -o libtest.so
+LD_LIBRARY_PATH=. java com.nk.Hello
 ```
 
 ###
+```json
 {{$s=new java.lang.String}}
+```
+

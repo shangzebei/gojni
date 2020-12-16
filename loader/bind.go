@@ -119,27 +119,28 @@ var NMap = map[int][]unsafe.Pointer{
 	12: {C.a12, C.b12, C.c12, C.e12, C.f12, C.g12},
 }
 
-var _native *native
-
-var _funcMapper map[string]method
-var statistics map[int]int
-
-var MAX_INDEX = 10
-var MAX_DEP = 6
+var (
+	fMappers   map[string]method
+	statistics map[int]int
+	MAX_INDEX  = 10
+	MAX_DEP    = 6
+)
 
 func init() {
 	statistics = make(map[int]int)
-	_funcMapper = make(map[string]method)
+	fMappers = make(map[string]method)
 }
 
-func Bind(cls string) *native {
-	if _native == nil {
-		env := jni.AutoGetCurrentThreadEnv()
-		jcls := env.FindClass(strings.ReplaceAll(cls, ".", "/"))
-		_native = &native{jCls: jcls, sCls: cls, env: env}
-		return _native
-	}
-	return _native
+func WithClass(cls string) *native {
+	env := jni.AutoGetCurrentThreadEnv()
+	jCls := env.FindClass(strings.ReplaceAll(cls, ".", "/"))
+	return &native{jCls: jCls, sCls: cls, env: env}
+
+}
+
+func (n *native) WithClass(cls string) *native {
+	n.Done()
+	return WithClass(cls)
 }
 
 func (n *native) getPFunc(inNum int) (int, int, string) {
@@ -174,7 +175,7 @@ func (n *native) BindNative(methodName string, def string, fun interface{}) *nat
 			gSig: goF.In(i),
 		})
 	}
-	_funcMapper[code] = method{
+	fMappers[code] = method{
 		fn:  fun,
 		sig: mArgs,
 	}
