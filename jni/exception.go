@@ -17,6 +17,7 @@ const (
 	JavaNullPointerException
 	JavaDirectorPureVirtual
 	JavaUnknownError
+	JavaException
 )
 
 var exceptionMap = map[JavaExceptionCodes]string{
@@ -29,10 +30,11 @@ var exceptionMap = map[JavaExceptionCodes]string{
 	JavaNullPointerException:      "java/lang/NullPointerException",
 	JavaDirectorPureVirtual:       "java/lang/RuntimeException",
 	JavaUnknownError:              "java/lang/UnknownError",
+	JavaException:                 "java/lang/Exception",
 }
 
 func ThrowException(msg string) {
-	JavaThrowException(AutoGetCurrentThreadEnv(), JavaUnknownError, msg+"\n"+string(debug.Stack()))
+	JavaThrowException(AutoGetCurrentThreadEnv(), JavaException, msg+"\n"+string(debug.Stack()))
 }
 
 func JavaThrowException(env Env, code JavaExceptionCodes, msg string) {

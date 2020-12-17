@@ -164,7 +164,7 @@ func (n *native) BindNative(methodName string, def string, fun interface{}) *nat
 	inNum := len(ms.ParamTyp) + 2
 	goF := reflect.TypeOf(fun)
 	if len(ms.ParamTyp) != goF.NumIn() {
-		panic(fmt.Sprintf("method def not match fun %s %d", ms.ParamTyp, goF.NumIn()))
+		panic(fmt.Sprintf("method %s not match fun %s %d", methodName, ms.ParamTyp, goF.NumIn()))
 	}
 	newNum, dep, code := n.getPFunc(inNum)
 	var mArgs []args
