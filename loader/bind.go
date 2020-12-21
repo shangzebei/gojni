@@ -169,12 +169,13 @@ func (n *native) BindNative(methodName string, def string, fun interface{}) *nat
 	newNum, dep, code := n.getPFunc(inNum)
 	var mArgs []args
 	for i := 0; i < goF.NumIn(); i++ {
-		n.checkType(i, methodName, def, ms.ParamTyp[i], goF.In(i))
+		n.CheckType(i, methodName, def, ms.ParamTyp[i], goF.In(i))
 		mArgs = append(mArgs, args{
 			jSig: ms.ParamTyp[i],
 			gSig: goF.In(i),
 		})
 	}
+	n.CheckReturn(methodName, ms.RetTyp, goF.Out(0))
 	fMappers[code] = method{
 		fn:  fun,
 		sig: mArgs,
@@ -192,18 +193,32 @@ var checkMap = map[string]reflect.Type{
 	"[J":                  reflect.TypeOf([]int{}),
 	"[F":                  reflect.TypeOf([]float32{}),
 	"[D":                  reflect.TypeOf([]float64{}),
+	"I":                   reflect.TypeOf(int32(0)),
+	"Ljava/lang/String;":  reflect.TypeOf(""),
+	"B":                   reflect.TypeOf(byte(0)),
+	"J":                   reflect.TypeOf(int(1)),
+	"F":                   reflect.TypeOf(float32(0.1)),
+	"D":                   reflect.TypeOf(float64(0.1)),
 }
 
-func (n *native) checkType(i int, mName string, def string, jsig string, gTyp reflect.Type) {
-	if gTyp.Kind() == reflect.Slice {
-		// fmt.Println(jsig, gTyp)
-		if v, b := checkMap[jsig]; !b || v != gTyp {
-			if b {
-				panic(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmust use go type ==> %s",
-					n.sCls, mName, def, i, gTyp, v))
-			} else {
-				panic(fmt.Sprintf("%s method %s definition { %s %d } sig %s not support", n.sCls, mName, def, i, jsig))
-			}
+func (n *native) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
+	if v, b := checkMap[jsig]; !b || v != gTyp {
+		if b {
+			panic(fmt.Sprintf("\n%s method %s return { %s  } not match go type {%s} \nmust use go type ==> %s",
+				n.sCls, mName, jsig, gTyp, v))
+		} else {
+			panic(fmt.Sprintf("%s method %s return { %s  }  not support", n.sCls, mName, jsig))
+		}
+	}
+}
+
+func (n *native) CheckType(i int, mName string, def string, jsig string, gTyp reflect.Type) {
+	if v, b := checkMap[jsig]; !b || v != gTyp {
+		if b {
+			panic(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmust use go type ==> %s",
+				n.sCls, mName, def, i, gTyp, v))
+		} else {
+			panic(fmt.Sprintf("%s method %s definition { %s %d } sig %s not support", n.sCls, mName, def, i, jsig))
 		}
 	}
 }
