@@ -71,7 +71,7 @@ func (vm *VM) call(c *jparser.Call) {
 	}
 
 	sig := "Object"
-	if s, b := utils.JMethodMap[c.Method.Sig.RetTyp]; b {
+	if s, b := utils.SigDecodeMap[c.Method.Sig.RetTyp]; b {
 		sig = s
 	}
 

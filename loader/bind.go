@@ -159,7 +159,7 @@ func (n *native) getPFunc(inNum int) (int, int, string) {
 
 func (n *native) BindNative(methodName string, def string, fun interface{}) *native {
 	jni.CheckNull(n.jCls, fmt.Sprintf("not find class %s", n.sCls))
-	ms := utils.GetSig(def)
+	ms := utils.EncodeToSig(def)
 	//fmt.Println(ms.Sig)
 	inNum := len(ms.ParamTyp) + 2
 	goF := reflect.TypeOf(fun)
@@ -175,7 +175,10 @@ func (n *native) BindNative(methodName string, def string, fun interface{}) *nat
 			gSig: goF.In(i),
 		})
 	}
-	n.CheckReturn(methodName, ms.RetTyp, goF.Out(0))
+	if goF.NumOut() > 0 {
+		n.CheckReturn(methodName, ms.RetTyp, goF.Out(0))
+	}
+
 	fMappers[code] = method{
 		fn:  fun,
 		sig: mArgs,
@@ -225,7 +228,14 @@ func (n *native) CheckType(i int, mName string, def string, jsig string, gTyp re
 
 func (n *native) Done() {
 	if n.env.RegisterNatives(n.jCls, n.natives) < 0 {
-		fmt.Println(n.natives)
-		panic("RegisterNatives error \n please check java native define ")
+		fmt.Println("java class: ", n.sCls)
+		n.printNative()
+		panic("RegisterNatives error \nplease check java native define ")
+	}
+}
+
+func (n *native) printNative() {
+	for _, nativeMethod := range n.natives {
+		fmt.Printf("%s %s\n", utils.Wp(nativeMethod.Name, 10), utils.Wp(nativeMethod.Sig, 100))
 	}
 }

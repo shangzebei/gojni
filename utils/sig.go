@@ -6,7 +6,7 @@ import (
 )
 
 //jni sig
-var SigMap = map[string]string{
+var SigEncodeMap = map[string]string{
 	"int":     "I",
 	"boolean": "Z",
 	"byte":    "B",
@@ -18,16 +18,16 @@ var SigMap = map[string]string{
 	"void":    "V",
 }
 
-var JMethodMap = map[string]string{
-	"I": "Int",
-	"Z": "Boolean",
-	"B": "Byte",
-	"C": "Char",
-	"S": "Short",
-	"J": "Long",
-	"F": "Float",
-	"D": "Double",
-	"V": "Void",
+var SigDecodeMap = map[string]string{
+	"I": "int",
+	"Z": "boolean",
+	"B": "byte",
+	"C": "char",
+	"S": "short",
+	"J": "long",
+	"F": "float",
+	"D": "double",
+	"V": "void",
 }
 
 type MethodSig struct {
@@ -41,7 +41,7 @@ func (a MethodSig) String() string {
 }
 
 //example void()
-func GetSig(oSig string) *MethodSig { //(I)V
+func EncodeToSig(oSig string) *MethodSig { //(I)V
 	m := MethodSig{}
 	if oSig == "" {
 		m.RetTyp = "VOID"
@@ -55,12 +55,12 @@ func GetSig(oSig string) *MethodSig { //(I)V
 		retV = "["
 		ret = strings.ReplaceAll(ret, "[]", "")
 	}
-	if v, b := SigMap[ret]; b {
+	if v, b := SigEncodeMap[ret]; b {
 		retV += v
 	} else if strings.Contains(ret, ".") { //class
 		retV += "L" + strings.ReplaceAll(ret, ".", "/") + ";"
 	} else {
-		panic(fmt.Sprintf("not find ret sig %s", ret))
+		panic(fmt.Sprintf("not find ret sig [%s] orig %s", ret, oSig))
 	}
 	m.RetTyp = retV
 	inputV := ""
@@ -75,7 +75,7 @@ func GetSig(oSig string) *MethodSig { //(I)V
 				temp = "["
 				value = strings.ReplaceAll(value, "[]", "")
 			}
-			if v, b := SigMap[value]; b {
+			if v, b := SigEncodeMap[value]; b {
 				temp += v
 			} else {
 				s := strings.ReplaceAll(value, ".", "/") + ";"
@@ -88,4 +88,17 @@ func GetSig(oSig string) *MethodSig { //(I)V
 	}
 	m.Sig = fmt.Sprintf("(%s)%s", inputV, retV)
 	return &m
+}
+
+/*
+	stop ()V
+	args ([I)V
+	nice ([Ljava/lang/String;)V
+	bb ([B)V
+	llll ([J)V
+	fff ([F)V
+	ddd ([D)V
+*/
+func SigToJavaNative(name string, sig string) {
+
 }

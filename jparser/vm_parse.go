@@ -114,7 +114,7 @@ func (vm *Compiler) Parse(s string) []Expr {
 				}
 			}
 			if sig := currentSig.Pop(); sig != nil {
-				cal.Method.Sig = utils.GetSig(sig.(string))
+				cal.Method.Sig = utils.EncodeToSig(sig.(string))
 			} else {
 				panic(fmt.Sprintf("method [%s] no sign in %s", cal.Method.Name, s))
 			}
