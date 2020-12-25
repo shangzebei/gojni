@@ -38,9 +38,9 @@ func GetModuleHandleExW(dwFlags uint32, lpModuleName unsafe.Pointer, hModule *sy
 func GetSelfPath() string {
 	var buf [100]byte
 	var hMd syscall.Handle
-	var err = GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, unsafe.Pointer(reflect.ValueOf(GetDllPath).Pointer()), &hMd)
+	var err = GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, unsafe.Pointer(reflect.ValueOf(GetSelfPath).Pointer()), &hMd)
 	if !err {
-		panic("windows GetDllPath err")
+		panic("windows GetSelfPath err")
 	}
 	size := GetModuleFileNameW(hMd, unsafe.Pointer(&buf), 100)
 	return string(buf[0:size])
