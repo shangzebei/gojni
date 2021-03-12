@@ -190,18 +190,18 @@ func (n *native) BindNative(methodName string, def string, fun interface{}) *nat
 }
 
 var checkMap = map[string]reflect.Type{
-	"[I":                  reflect.TypeOf([]int32{}),
-	"[Ljava/lang/String;": reflect.TypeOf([]string{}),
-	"[B":                  reflect.TypeOf([]byte{}),
-	"[J":                  reflect.TypeOf([]int{}),
-	"[F":                  reflect.TypeOf([]float32{}),
-	"[D":                  reflect.TypeOf([]float64{}),
-	"I":                   reflect.TypeOf(int32(0)),
-	"Ljava/lang/String;":  reflect.TypeOf(""),
-	"B":                   reflect.TypeOf(byte(0)),
-	"J":                   reflect.TypeOf(int(1)),
-	"F":                   reflect.TypeOf(float32(0.1)),
-	"D":                   reflect.TypeOf(float64(0.1)),
+	"[I":                  reflect.TypeOf((*[]int32)(nil)).Elem(),
+	"[Ljava/lang/String;": reflect.TypeOf((*[]string)(nil)).Elem(),
+	"[B":                  reflect.TypeOf((*[]byte)(nil)).Elem(),
+	"[J":                  reflect.TypeOf((*[]int)(nil)).Elem(),
+	"[F":                  reflect.TypeOf((*[]float32)(nil)).Elem(),
+	"[D":                  reflect.TypeOf((*[]float64)(nil)).Elem(),
+	"I":                   reflect.TypeOf((*int32)(nil)).Elem(),
+	"Ljava/lang/String;":  reflect.TypeOf((*string)(nil)).Elem(),
+	"B":                   reflect.TypeOf((*byte)(nil)).Elem(),
+	"J":                   reflect.TypeOf((*int)(nil)).Elem(),
+	"F":                   reflect.TypeOf((*float32)(nil)).Elem(),
+	"D":                   reflect.TypeOf((*float64)(nil)).Elem(),
 }
 
 func (n *native) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
@@ -236,6 +236,6 @@ func (n *native) Done() {
 
 func (n *native) printNative() {
 	for _, nativeMethod := range n.natives {
-		fmt.Printf("%s %s\n", utils.Wp(nativeMethod.Name, 10), utils.Wp(nativeMethod.Sig, 100))
+		fmt.Printf("%s %s\n", utils.Wp(nativeMethod.Name, 30), utils.Wp(nativeMethod.Sig, 100))
 	}
 }

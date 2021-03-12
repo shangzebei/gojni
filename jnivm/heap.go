@@ -5,21 +5,23 @@ import (
 )
 
 type ojb struct {
-	jCls jni.Jclass
-	jObj jni.Jobject
+	varName string
+	jCls    jni.Jclass
+	jObj    jni.Jobject
 }
 
-type ojbHelp []ojb
+//heap
+type ojbHeap []ojb
 
-func (h *ojbHelp) Swap(i, j int) {
+func (h *ojbHeap) Swap(i, j int) {
 	(*h)[i], (*h)[j] = (*h)[j], (*h)[i]
 }
 
-func (h *ojbHelp) Len() int {
+func (h *ojbHeap) Len() int {
 	return len(*h)
 }
 
-func (h *ojbHelp) Pop() (v interface{}) {
+func (h *ojbHeap) Pop() (v interface{}) {
 	if h.Len() == 0 {
 		return nil
 	}
@@ -27,6 +29,6 @@ func (h *ojbHelp) Pop() (v interface{}) {
 	return
 }
 
-func (h *ojbHelp) Push(v ojb) {
+func (h *ojbHeap) Push(v ojb) {
 	*h = append(*h, v)
 }

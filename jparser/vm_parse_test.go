@@ -16,11 +16,12 @@ var testSets = []string{
 	"$2.getName[java.lang.String()]();",
 	"new com.szb.Hello[void()]().show[void()]()",
 	"com.szb.Hello.send[void()]()",
+	"com.szb.Hello.send[void()](@2)",
 }
 
 func TestParse(t *testing.T) {
 	v := Compiler{check: false}
-	fmt.Println(v.Parse(testSets[8]))
+	fmt.Println(Print(v.Parse(testSets[10])))
 }
 
 func TestRun(t *testing.T) {

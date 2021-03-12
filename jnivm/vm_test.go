@@ -6,7 +6,7 @@ import (
 )
 
 func TestOjbHelp(t *testing.T) {
-	var o ojbHelp
+	var o ojbHeap
 	o.Push(ojb{})
 	fmt.Println(o.Len())
 	o.Push(ojb{})

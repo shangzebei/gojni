@@ -102,3 +102,4 @@ func EncodeToSig(oSig string) *MethodSig { //(I)V
 func SigToJavaNative(name string, sig string) {
 
 }
+
