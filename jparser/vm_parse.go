@@ -2,6 +2,7 @@ package jparser
 
 import (
 	"fmt"
+	"gitee.com/aifuturewell/gojni/jni"
 	"gitee.com/aifuturewell/gojni/native"
 	"gitee.com/aifuturewell/gojni/utils"
 	"regexp"
@@ -117,7 +118,7 @@ func (vm *Compiler) Parse(s string) []Expr {
 			if sig := currentSig.Pop(); sig != nil {
 				cal.Method.Sig = native.EncodeToSig(sig.(string))
 			} else {
-				panic(fmt.Sprintf("method [%s] no sign in %s", cal.Method.Name, s))
+				jni.ThrowException(fmt.Sprintf("method [%s] no sign in %s", cal.Method.Name, s))
 			}
 			topNode := nh.Top()
 			if topNode != nil {
@@ -162,13 +163,13 @@ func (vm *Compiler) getArgs(args string) []Expr {
 		case strings.Contains(sp, "$"):
 			i, e := strconv.ParseInt(sp[1:], 10, 32)
 			if e != nil {
-				panic(e)
+				jni.ThrowException(e.Error())
 			}
 			v = append(v, Arg{ArgN: i, Typ: 0})
 		case strings.Contains(sp, "@"):
 			i, e := strconv.ParseInt(sp[1:], 10, 32)
 			if e != nil {
-				panic(e)
+				jni.ThrowException(e.Error())
 			}
 			v = append(v, Arg{ArgN: i, Typ: 1})
 		default:

@@ -31,7 +31,7 @@ func LoadClass(name string) Class {
 	name = strings.ReplaceAll(name, ".", "/")
 	jcls := env.FindClass(name)
 	if jcls == 0 {
-		panic(fmt.Errorf("not find class %s", name))
+		jni.ThrowException(fmt.Sprintf("not find class %s", name))
 	}
 	return Class{mClass: NewClassMeta(jcls, name), env: env}
 }
@@ -48,11 +48,11 @@ func (cls Class) StaticInvoke(name string, sig string, args ...interface{}) Valu
 	env := jni.AutoGetCurrentThreadEnv()
 	sm := EncodeToSig(sig)
 	if len(sm.ParamTyp) != len(args) {
-		panic("args length is not enough")
+		jni.ThrowException("args length is not enough")
 	}
 	jMethod := env.GetStaticMethodID(cls.mClass.jcls, name, sm.Sig)
 	if jMethod == 0 {
-		panic(fmt.Errorf("method %s not find maybe err %s", name, sm.Sig))
+		jni.ThrowException(fmt.Sprintf("method %s not find maybe err %s", name, sm.Sig))
 	}
 	sType := sm.RetTyp.GetSigType()
 	defArgs := []interface{}{

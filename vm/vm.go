@@ -31,7 +31,7 @@ func RunSource(s string) native.Value {
 }
 
 func RunBitCode(byes []byte) {
-	panic("not impl")
+	jni.ThrowException("not impl")
 }
 
 func (vm *VM) runSegment(exp []jparser.Expr) native.Value {
@@ -43,12 +43,12 @@ func (vm *VM) runSegment(exp []jparser.Expr) native.Value {
 }
 
 func (vm *VM) doAssignment(ass *jparser.Assignment) native.Value {
-	panic("not impl")
+	jni.ThrowException("not impl")
 	return native.Value{}
 }
 
 func (vm *VM) doDefine(ass *jparser.Define) native.Value {
-	panic("not impl")
+	jni.ThrowException("not impl")
 	return native.Value{}
 }
 
@@ -79,7 +79,7 @@ func (vm *VM) doCall(c *jparser.Call) native.Value {
 	case *jparser.Call:
 		vm.doCall(c.Owner.(*jparser.Call))
 	default:
-		panic("not find c.Owner type " + reflect.ValueOf(c.Owner).Type().String())
+		jni.ThrowException("not find c.Owner type " + reflect.ValueOf(c.Owner).Type().String())
 	}
 
 	sig := c.Method.Sig.RetTyp.GetType()
@@ -121,7 +121,8 @@ func (vm *VM) doCall(c *jparser.Call) native.Value {
 		ret := utils.CallJni(utils.GetFormatCallFunc("Call%sMethodA", sig), vm.env, jObj, jMethod)
 		return native.NewValue(c.Method.Sig.RetTyp, ret)
 	default:
-		panic(fmt.Sprintf("not support ClassTyp %d ", c.ClassTyp))
+		jni.ThrowException(fmt.Sprintf("not support ClassTyp %d ", c.ClassTyp))
 	}
+	return native.Value{}
 
 }

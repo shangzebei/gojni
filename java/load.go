@@ -12,18 +12,13 @@ var onUnLoads []func()
 //export JNI_OnLoad
 func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 	runtime.LockOSThread()
-	defer func() {
-		if err := recover(); err != nil {
-			panic(err)
-		}
-	}()
 	jni.InitJNI(vm)
 	r := Register{vm: jni.VM(vm)}
 	for _, f := range onLoads {
 		f(r)
 	}
 	if _, v := jni.VM(vm).GetEnv(jni.JNI_VERSION_1_6); v != jni.JNI_OK {
-		panic("JNI_OnLoad error")
+		jni.ThrowException("JNI_OnLoad error")
 		return -1
 	}
 	return jni.JNI_VERSION_1_6

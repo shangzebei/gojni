@@ -2,6 +2,7 @@ package native
 
 import (
 	"fmt"
+	"gitee.com/aifuturewell/gojni/jni"
 	"gitee.com/aifuturewell/gojni/utils"
 	"strings"
 )
@@ -15,6 +16,9 @@ func NewSig(typeName string) *Sig {
 	var styp string
 	if s, b := utils.SigEncodeMap[typeName]; b {
 		styp = s
+	} else if strings.HasSuffix(typeName, "[]") {
+		pkg := strings.ReplaceAll(typeName[:len(typeName)-2], ".", "/")
+		styp = "[L" + pkg + ";"
 	} else {
 		pkg := strings.ReplaceAll(typeName, ".", "/")
 		styp = "L" + pkg + ";"
@@ -31,10 +35,13 @@ func SigOf(siged string) *Sig {
 	if s, b := utils.SigDecodeMap[siged]; b {
 		otyp = s
 	} else {
-		if siged[0] == 'L' && strings.HasSuffix(siged, ";") {
+		//object
+		if siged[0] == 'L' { //Ljava/lang/String; => java.lang.String
 			otyp = strings.ReplaceAll(siged[1:len(siged)-1], "/", ".")
+		} else if siged[0] == '[' { //[Ljava/lang/String; => java.lang.string[]
+			otyp = strings.ReplaceAll(siged[2:len(siged)-1], "/", ".") + "[]"
 		} else {
-			panic(fmt.Errorf("decode err %s", siged))
+			jni.ThrowException(fmt.Sprintf("decode err %s", siged))
 		}
 	}
 	return &Sig{

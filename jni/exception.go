@@ -93,13 +93,11 @@ func CheckNull(uin uintptr, msg string) {
 	if uin == 0 {
 		env := AutoGetCurrentThreadEnv()
 		JavaThrowException(env, JavaNullPointerException, msg)
-		panic(msg)
 	}
 }
 
 func CheckException(env Env) {
 	if env.ExceptionCheck() {
 		PrintException(env, env.ExceptionOccurred())
-
 	}
 }

@@ -40,7 +40,7 @@ func GetSelfPath() string {
 	var hMd syscall.Handle
 	var err = GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS|GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, unsafe.Pointer(reflect.ValueOf(GetSelfPath).Pointer()), &hMd)
 	if !err {
-		panic("windows GetSelfPath err")
+		ThrowException("windows GetSelfPath err")
 	}
 	size := GetModuleFileNameW(hMd, unsafe.Pointer(&buf), 100)
 	return string(buf[0:size])
@@ -56,7 +56,7 @@ func AutoGetCurrentThreadEnv() Env {
 	if env, v := wVm.GetEnv(JNI_VERSION_1_6); v == JNI_OK {
 		return env
 	} else {
-		panic("JNI_OnLoad error")
+		ThrowException("JNI_OnLoad error")
 		return 0
 	}
 }

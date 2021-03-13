@@ -2,6 +2,7 @@ package native
 
 import (
 	"fmt"
+	"gitee.com/aifuturewell/gojni/jni"
 	"gitee.com/aifuturewell/gojni/utils"
 	"strings"
 )
@@ -31,7 +32,7 @@ func EncodeToSig(oSig string) *MethodSig { //(I)V
 	} else if strings.Contains(ret, ".") { //class
 		retV += "L" + strings.ReplaceAll(ret, ".", "/") + ";"
 	} else {
-		panic(fmt.Sprintf("not find ret sig [%s] orig %s", ret, oSig))
+		jni.ThrowException(fmt.Sprintf("not find ret sig [%s] orig %s", ret, oSig))
 	}
 	retTyp = retV
 	inputV := ""
