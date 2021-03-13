@@ -1,18 +1,26 @@
-package loader
+package java
 
 import "C"
 import (
 	"gitee.com/aifuturewell/gojni/jni"
+	"runtime"
 )
 
-var onLoads []func(vm uintptr)
-var onUnLoads []func(vm uintptr)
+var onLoads []func(reg Register)
+var onUnLoads []func()
 
 //export JNI_OnLoad
 func JNI_OnLoad(vm uintptr, reserved uintptr) int {
+	runtime.LockOSThread()
+	defer func() {
+		if err := recover(); err != nil {
+			panic(err)
+		}
+	}()
 	jni.InitJNI(vm)
+	r := Register{vm: jni.VM(vm)}
 	for _, f := range onLoads {
-		f(vm)
+		f(r)
 	}
 	if _, v := jni.VM(vm).GetEnv(jni.JNI_VERSION_1_6); v != jni.JNI_OK {
 		panic("JNI_OnLoad error")
@@ -24,14 +32,15 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 //export JNI_OnUnload
 func JNI_OnUnload(vm uintptr, reserved uintptr) {
 	for _, f := range onUnLoads {
-		f(vm)
+		f()
 	}
+	runtime.UnlockOSThread()
 }
 
-func OnLoad(f func(vm uintptr)) {
+func OnLoad(f func(reg Register)) {
 	onLoads = append(onLoads, f)
 }
 
-func OnUnload(f func(vm uintptr)) {
+func OnUnload(f func()) {
 	onUnLoads = append(onUnLoads, f)
 }

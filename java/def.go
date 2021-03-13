@@ -1,8 +1,9 @@
-package loader
+package java
 
 import "C"
 import (
 	"fmt"
+	"gitee.com/aifuturewell/gojni/utils"
 	"reflect"
 	"unsafe"
 
@@ -431,27 +432,9 @@ func router(s string, p ...uintptr) uintptr {
 		if len(rValues) != 1 {
 			return 0
 		}
-		return JabValueToUint(rValues[0])
+		return utils.JabValueToUint(rValues[0])
 	}
 	return 0
-}
-
-//TODO not impl
-func JabValueToUint(r reflect.Value) uintptr {
-	env := jni.AutoGetCurrentThreadEnv()
-	switch r.Type().Kind() {
-	case reflect.String:
-		return env.NewString(r.String())
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return uintptr(r.Int())
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return uintptr(r.Uint())
-	case reflect.Float32, reflect.Float64:
-		//fmt.Println(reflect.ValueOf(20.65).Addr().Pointer())
-		return uintptr(r.Float())
-	default:
-		panic(fmt.Sprintf("Return not support type %s", r.Kind().String()))
-	}
 }
 
 func convertParam(f method, params ...uintptr) []reflect.Value {

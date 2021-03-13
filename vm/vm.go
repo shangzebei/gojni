@@ -1,15 +1,15 @@
-package jnivm
+package vm
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/loader"
+	"gitee.com/aifuturewell/gojni/jparser"
+	"gitee.com/aifuturewell/gojni/native"
+	"gitee.com/aifuturewell/gojni/utils"
 	"log"
 	"reflect"
 	"strings"
 
 	"gitee.com/aifuturewell/gojni/jni"
-	"gitee.com/aifuturewell/gojni/jparser"
-	"gitee.com/aifuturewell/gojni/utils"
 )
 
 type VM struct {
@@ -19,12 +19,12 @@ type VM struct {
 	methods    map[string]reflect.Method
 }
 
-func RunExpr(exp jparser.Expr) value {
+func RunExpr(exp jparser.Expr) native.Value {
 	v := VM{env: jni.AutoGetCurrentThreadEnv()}
 	return v.run(exp)
 }
 
-func RunSource(s string) value {
+func RunSource(s string) native.Value {
 	cmp := jparser.Compiler{}
 	v := VM{env: jni.AutoGetCurrentThreadEnv()}
 	return v.runSegment(cmp.Parse(s))
@@ -34,49 +34,25 @@ func RunBitCode(byes []byte) {
 	panic("not impl")
 }
 
-var methods map[string]reflect.Method
-
-func GetJNIMethods() map[string]reflect.Method {
-	return methods
-}
-
-func GetMethodWithName(name string) *reflect.Method {
-	if v, b := methods[strings.ToLower(name)]; b {
-		return &v
-	} else {
-		return nil
-	}
-}
-
-func init() {
-	var vm jni.Env
-	methods = make(map[string]reflect.Method)
-	f := reflect.TypeOf(vm)
-	for i := 0; i < f.NumMethod(); i++ {
-		m := f.Method(i)
-		methods[strings.ToLower(m.Name)] = m
-	}
-}
-
-func (vm *VM) runSegment(exp []jparser.Expr) value {
-	var v value
+func (vm *VM) runSegment(exp []jparser.Expr) native.Value {
+	var v native.Value
 	for _, expr := range exp {
 		v = vm.run(expr)
 	}
 	return v
 }
 
-func (vm *VM) doAssignment(ass *jparser.Assignment) value {
+func (vm *VM) doAssignment(ass *jparser.Assignment) native.Value {
 	panic("not impl")
-	return value{}
+	return native.Value{}
 }
 
-func (vm *VM) doDefine(ass *jparser.Define) value {
+func (vm *VM) doDefine(ass *jparser.Define) native.Value {
 	panic("not impl")
-	return value{}
+	return native.Value{}
 }
 
-func (vm *VM) run(exp jparser.Expr) value {
+func (vm *VM) run(exp jparser.Expr) native.Value {
 	switch exp.(type) {
 	case *jparser.Assignment:
 		as := exp.(*jparser.Assignment)
@@ -88,10 +64,10 @@ func (vm *VM) run(exp jparser.Expr) value {
 	default:
 		log.Fatal("not support")
 	}
-	return value{}
+	return native.Value{}
 }
 
-func (vm *VM) doCall(c *jparser.Call) value {
+func (vm *VM) doCall(c *jparser.Call) native.Value {
 	var jCls jni.Jclass
 	var jObj jni.Jobject
 
@@ -106,10 +82,7 @@ func (vm *VM) doCall(c *jparser.Call) value {
 		panic("not find c.Owner type " + reflect.ValueOf(c.Owner).Type().String())
 	}
 
-	sig := "Object"
-	if s, b := utils.SigDecodeMap[c.Method.Sig.RetTyp]; b {
-		sig = s
-	}
+	sig := c.Method.Sig.RetTyp.GetType()
 
 	if o := vm.objs.Pop(); o != nil {
 		fmt.Println("set v")
@@ -124,8 +97,8 @@ func (vm *VM) doCall(c *jparser.Call) value {
 	case jparser.STATICOJB:
 		jMethod := vm.env.GetStaticMethodID(jCls, c.Method.Name, c.Method.Sig.Sig)
 		jni.CheckNull(jMethod, fmt.Sprintf("not find static method %s [ %s ]", c.Method.Name, c.Method.Sig))
-		ret := callJni(fmt.Sprintf("CallStatic%sMethodA", sig), vm.env, jCls, jMethod)
-		return value{sig: c.Method.Sig, v: *ret}
+		ret := utils.CallJni(utils.GetFormatCallFunc("CallStatic%sMethodA", sig), vm.env, jCls, jMethod)
+		return native.NewValue(c.Method.Sig.RetTyp, ret)
 	case jparser.NEWOBJECT:
 		jMethod := vm.env.GetMethodID(jCls, c.Method.Name, c.Method.Sig.Sig)
 		fmt.Println(c.Method.Name, c.Method.Sig.Sig)
@@ -139,39 +112,16 @@ func (vm *VM) doCall(c *jparser.Call) value {
 			})
 		}
 		jni.CheckNull(jObj, "obj is null")
-		ret := callJni(fmt.Sprintf("Call%sMethodA", sig), vm.env, jObj, jMethod)
-		return value{sig: c.Method.Sig, v: *ret}
+		ret := utils.CallJni(utils.GetFormatCallFunc("Call%sMethodA", sig), vm.env, jObj, jMethod)
+		return native.NewValue(c.Method.Sig.RetTyp, ret)
 	case jparser.OBJECTINVOKE:
 		jni.CheckNull(jObj, "obj is null")
 		jMethod := vm.env.GetMethodID(jCls, c.Method.Name, c.Method.Sig.Sig)
 		jni.CheckNull(jMethod, fmt.Sprintf("not find OBJECTINVOKE method %s", c.Method.Name))
-		ret := callJni(fmt.Sprintf("Call%sMethodA", sig), vm.env, jObj, jMethod)
-		return value{sig: c.Method.Sig, v: *ret}
+		ret := utils.CallJni(utils.GetFormatCallFunc("Call%sMethodA", sig), vm.env, jObj, jMethod)
+		return native.NewValue(c.Method.Sig.RetTyp, ret)
 	default:
 		panic(fmt.Sprintf("not support ClassTyp %d ", c.ClassTyp))
 	}
 
-}
-
-func callJni(format string, args ...interface{}) *reflect.Value {
-	m := GetMethodWithName(format)
-	if m == nil {
-		panic("method def is error")
-	}
-	var params []reflect.Value
-	index := m.Type.NumIn() - 1
-	for i, v := range args {
-		of := reflect.ValueOf(v)
-		if i >= index {
-			params = append(params, reflect.ValueOf(uint64(loader.JabValueToUint(of))))
-		} else {
-			params = append(params, of)
-		}
-	}
-	//fmt.Println(params)
-	ret := m.Func.Call(params)
-	if len(ret) != 0 {
-		return &ret[0]
-	}
-	return nil
 }

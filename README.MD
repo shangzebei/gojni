@@ -1,16 +1,17 @@
-### quick start
-#### in go 
+## quick start
+### 1.java invoke native
+in go 
 ```go
 package main
 import (
 	"fmt"
 	"unsafe"
-	"gitee.com/aifuturewell/gojni/loader"
+	"gitee.com/aifuturewell/gojni/java"
 )
 func main() {}
 func init() {
-	loader.OnLoad(func(vm uintptr) {
-		loader.WithClass("com.nk.Hello").
+	java.OnLoad(func(reg java.Register) {
+		reg.WithClass("com.nk.Hello").
 			BindNative("nice", "void(java.lang.String[])", nice).
 			Done()
 	})
@@ -20,7 +21,7 @@ func nice(ss []string) {
 	fmt.Println(ss)
 }
 ```
-#### in java
+in java
 ```java
 package com.nk;
 
@@ -40,7 +41,16 @@ CGO_CFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux" go build -buildmode
 LD_LIBRARY_PATH=. java com.nk.Hello
 ```
 
-###
+### 2.native invoke java
+```go
+native.LoadClass("com.szb.Jvm").New().Invoke("attach", "void()")
+
+fmt.Println(vm.RunSource("java.lang.Thread.currentThread[java.lang.Thread()]();").
+				AsObject().
+				Invoke("getName", "java.lang.String()").
+				AsString())
+```
+
 ```json
 {{$s=new java.lang.String}}
 ```

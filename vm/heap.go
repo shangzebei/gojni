@@ -1,4 +1,4 @@
-package jnivm
+package vm
 
 import (
 	"gitee.com/aifuturewell/gojni/jni"

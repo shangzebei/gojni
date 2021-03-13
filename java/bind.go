@@ -1,4 +1,4 @@
-package loader
+package java
 
 //extern void* a2(void *,void *);
 //extern void* a3(void *,void *,void *);
@@ -80,6 +80,7 @@ package loader
 import "C"
 import (
 	"fmt"
+	"gitee.com/aifuturewell/gojni/native"
 	"reflect"
 	"strings"
 	"unsafe"
@@ -88,7 +89,7 @@ import (
 	"gitee.com/aifuturewell/gojni/utils"
 )
 
-type native struct {
+type nativeWarp struct {
 	sCls    string
 	jCls    jni.Jclass
 	env     jni.Env
@@ -105,7 +106,7 @@ type args struct {
 	gSig reflect.Type
 }
 
-var NMap = map[int][]unsafe.Pointer{
+var nMap = map[int][]unsafe.Pointer{
 	2:  {C.a2, C.b2, C.c2, C.d2, C.e2, C.f2, C.g2},
 	3:  {C.a3, C.b3, C.c3, C.d3, C.e3, C.f3, C.g3},
 	4:  {C.a4, C.b4, C.c4, C.d4, C.e4, C.f4, C.g4},
@@ -122,8 +123,11 @@ var NMap = map[int][]unsafe.Pointer{
 var (
 	fMappers   map[string]method
 	statistics map[int]int
-	MAX_INDEX  = 10
-	MAX_DEP    = 6
+)
+
+const (
+	max_index = 10
+	max_dep   = 6
 )
 
 func init() {
@@ -131,25 +135,35 @@ func init() {
 	fMappers = make(map[string]method)
 }
 
-func WithClass(cls string) *native {
+type Register struct {
+	vm jni.VM
+}
+
+func (reg *Register) WithClass(cls string) *nativeWarp {
+	if reg.vm == 0 {
+		panic("forbid")
+	}
+	return withClass(cls)
+}
+
+func withClass(cls string) *nativeWarp {
 	env := jni.AutoGetCurrentThreadEnv()
 	jCls := env.FindClass(strings.ReplaceAll(cls, ".", "/"))
-	return &native{jCls: jCls, sCls: cls, env: env}
-
+	return &nativeWarp{jCls: jCls, sCls: cls, env: env}
 }
 
-func (n *native) WithClass(cls string) *native {
+func (n *nativeWarp) WithClass(cls string) *nativeWarp {
 	n.Done()
-	return WithClass(cls)
+	return withClass(cls)
 }
 
-func (n *native) getPFunc(inNum int) (int, int, string) {
+func (n *nativeWarp) getPFunc(inNum int) (int, int, string) {
 
-	if inNum >= MAX_INDEX {
-		panic(fmt.Sprintf("function param overflow max %d numIN %d", MAX_INDEX, inNum))
+	if inNum >= max_index {
+		panic(fmt.Sprintf("function param overflow max %d numIN %d", max_index, inNum))
 	}
 	dep := statistics[inNum]
-	if dep >= MAX_DEP {
+	if dep >= max_dep {
 		inNum++
 		return n.getPFunc(inNum)
 	}
@@ -157,34 +171,34 @@ func (n *native) getPFunc(inNum int) (int, int, string) {
 	return inNum, dep, code
 }
 
-func (n *native) BindNative(methodName string, def string, fun interface{}) *native {
+func (n *nativeWarp) BindNative(javaMethodName string, def string, fun interface{}) *nativeWarp {
 	jni.CheckNull(n.jCls, fmt.Sprintf("not find class %s", n.sCls))
-	ms := utils.EncodeToSig(def)
+	ms := native.EncodeToSig(def)
 	//fmt.Println(ms.Sig)
 	inNum := len(ms.ParamTyp) + 2
 	goF := reflect.TypeOf(fun)
 	if len(ms.ParamTyp) != goF.NumIn() {
-		panic(fmt.Sprintf("method %s not match fun %s %d", methodName, ms.ParamTyp, goF.NumIn()))
+		panic(fmt.Sprintf("method %s not match fun %s %d", javaMethodName, ms.ParamTyp, goF.NumIn()))
 	}
 	newNum, dep, code := n.getPFunc(inNum)
 	var mArgs []args
 	for i := 0; i < goF.NumIn(); i++ {
-		n.CheckType(i, methodName, def, ms.ParamTyp[i], goF.In(i))
+		n.CheckType(i, javaMethodName, def, ms.ParamTyp[i].GetSigType(), goF.In(i))
 		mArgs = append(mArgs, args{
-			jSig: ms.ParamTyp[i],
+			jSig: ms.ParamTyp[i].GetSigType(),
 			gSig: goF.In(i),
 		})
 	}
 	if goF.NumOut() > 0 {
-		n.CheckReturn(methodName, ms.RetTyp, goF.Out(0))
+		n.CheckReturn(javaMethodName, ms.RetTyp.GetSigType(), goF.Out(0))
 	}
 
 	fMappers[code] = method{
 		fn:  fun,
 		sig: mArgs,
 	}
-	cf := NMap[newNum][dep]
-	n.natives = append(n.natives, jni.JNINativeMethod{Name: methodName, Sig: ms.Sig, FnPtr: cf})
+	cf := nMap[newNum][dep]
+	n.natives = append(n.natives, jni.JNINativeMethod{Name: javaMethodName, Sig: ms.Sig, FnPtr: cf})
 	statistics[newNum] += 1
 	return n
 }
@@ -204,7 +218,7 @@ var checkMap = map[string]reflect.Type{
 	"D":                   reflect.TypeOf((*float64)(nil)).Elem(),
 }
 
-func (n *native) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
+func (n *nativeWarp) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
 	if v, b := checkMap[jsig]; !b || v != gTyp {
 		if b {
 			panic(fmt.Sprintf("\n%s method %s return { %s  } not match go type {%s} \nmust use go type ==> %s",
@@ -215,7 +229,7 @@ func (n *native) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
 	}
 }
 
-func (n *native) CheckType(i int, mName string, def string, jsig string, gTyp reflect.Type) {
+func (n *nativeWarp) CheckType(i int, mName string, def string, jsig string, gTyp reflect.Type) {
 	if v, b := checkMap[jsig]; !b || v != gTyp {
 		if b {
 			panic(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmust use go type ==> %s",
@@ -226,15 +240,15 @@ func (n *native) CheckType(i int, mName string, def string, jsig string, gTyp re
 	}
 }
 
-func (n *native) Done() {
+func (n *nativeWarp) Done() {
 	if n.env.RegisterNatives(n.jCls, n.natives) < 0 {
 		fmt.Println("java class: ", n.sCls)
 		n.printNative()
-		panic("RegisterNatives error \nplease check java native define ")
+		panic("RegisterNatives error \nplease check java nativeWarp define ")
 	}
 }
 
-func (n *native) printNative() {
+func (n *nativeWarp) printNative() {
 	for _, nativeMethod := range n.natives {
 		fmt.Printf("%s %s\n", utils.Wp(nativeMethod.Name, 30), utils.Wp(nativeMethod.Sig, 100))
 	}

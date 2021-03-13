@@ -2,6 +2,7 @@ package jparser
 
 import (
 	"fmt"
+	"gitee.com/aifuturewell/gojni/native"
 	"gitee.com/aifuturewell/gojni/utils"
 	"regexp"
 	"strconv"
@@ -30,7 +31,7 @@ type Assignment struct {
 
 type MethodMeta struct {
 	Name string
-	Sig  *utils.MethodSig
+	Sig  *native.MethodSig
 }
 
 type Call struct {
@@ -114,7 +115,7 @@ func (vm *Compiler) Parse(s string) []Expr {
 				}
 			}
 			if sig := currentSig.Pop(); sig != nil {
-				cal.Method.Sig = utils.EncodeToSig(sig.(string))
+				cal.Method.Sig = native.EncodeToSig(sig.(string))
 			} else {
 				panic(fmt.Sprintf("method [%s] no sign in %s", cal.Method.Name, s))
 			}

@@ -28,3 +28,7 @@ func log_info(v *C.char) {
 func log_fatal(v *C.char) {
 	log.Fatal(C.GoString(v))
 }
+
+func SetVm(mVm VM) {
+
+}

@@ -1,15 +1,16 @@
-package jnivm
+package vm
 
 import (
 	"fmt"
+	"gitee.com/aifuturewell/gojni/native"
 	"testing"
 )
 
 func TestOjbHelp(t *testing.T) {
-	var o ojbHeap
-	o.Push(ojb{})
+	var o native.ojbHeap
+	o.Push(native.ojb{})
 	fmt.Println(o.Len())
-	o.Push(ojb{})
+	o.Push(native.ojb{})
 	fmt.Println(o.Len())
 
 }
