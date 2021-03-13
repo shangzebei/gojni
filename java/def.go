@@ -464,7 +464,7 @@ func convertParam(f method, params ...uintptr) []reflect.Value {
 			jni.CheckNull(p, "jni input slice is null")
 			ret = append(ret, convertParamSlice(env, s.gSig, p))
 		default:
-			jni.ThrowException("convertParam not support")
+			panic("convertParam not support")
 		}
 	}
 	return ret
@@ -533,7 +533,7 @@ func convertParamSlice(env jni.Env, Array reflect.Type, p uintptr) reflect.Value
 		head.Len /= iTypes
 		return reflect.ValueOf(*(*[]float64)(unsafe.Pointer(head)))
 	default:
-		jni.ThrowException(fmt.Sprintf("not support Array %s ", item))
+		panic(fmt.Sprintf("not support Array %s ", item))
 	}
 	return reflect.Value{}
 }

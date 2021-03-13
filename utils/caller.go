@@ -34,7 +34,7 @@ func init() {
 func CallJni(format string, args ...interface{}) reflect.Value {
 	m := GetMethodWithName(format)
 	if m == nil {
-		jni.ThrowException(fmt.Sprintf("method def is error %s", format))
+		panic(fmt.Errorf("method def is error %s", format))
 	}
 	var params []reflect.Value
 	index := m.Type.NumIn() - 1
@@ -68,9 +68,8 @@ func JabValueToUint(r reflect.Value) uintptr {
 		//fmt.Println(reflect.ValueOf(20.65).Addr().Pointer())
 		return uintptr(r.Float())
 	default:
-		jni.ThrowException(fmt.Sprintf("Return not support type %s", r.Kind().String()))
+		panic(fmt.Sprintf("Return not support type %s", r.Kind().String()))
 	}
-	return 0
 }
 
 func GetFormatCallFunc(format string, siged string) string {

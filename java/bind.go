@@ -141,7 +141,7 @@ type Register struct {
 
 func (reg *Register) WithClass(cls string) *nativeWarp {
 	if reg.vm == 0 {
-		jni.ThrowException("forbid")
+		panic("forbid")
 	}
 	return withClass(cls)
 }
@@ -163,7 +163,7 @@ func (n *nativeWarp) WithClass(cls string) *nativeWarp {
 func (n *nativeWarp) getPFunc(inNum int) (int, int, string) {
 
 	if inNum >= max_index {
-		jni.ThrowException(fmt.Sprintf("function param overflow max %d numIN %d", max_index, inNum))
+		panic(fmt.Sprintf("function param overflow max %d numIN %d", max_index, inNum))
 	}
 	dep := statistics[inNum]
 	if dep >= max_dep {
@@ -181,7 +181,7 @@ func (n *nativeWarp) BindNative(javaMethodName string, def string, fun interface
 	inNum := len(ms.ParamTyp) + 2
 	goF := reflect.TypeOf(fun)
 	if len(ms.ParamTyp) != goF.NumIn() {
-		jni.ThrowException(fmt.Sprintf("method %s not match fun %s %d", javaMethodName, ms.ParamTyp, goF.NumIn()))
+		panic(fmt.Sprintf("method %s not match fun %s %d", javaMethodName, ms.ParamTyp, goF.NumIn()))
 	}
 	newNum, dep, code := n.getPFunc(inNum)
 	var mArgs []args
@@ -224,10 +224,10 @@ var checkMap = map[string]reflect.Type{
 func (n *nativeWarp) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
 	if v, b := checkMap[jsig]; !b || v != gTyp {
 		if b {
-			jni.ThrowException(fmt.Sprintf("\n%s method %s return { %s  } not match go type {%s} \nmust use go type ==> %s",
+			panic(fmt.Sprintf("\n%s method %s return { %s  } not match go type {%s} \nmust use go type ==> %s",
 				n.sCls, mName, jsig, gTyp, v))
 		} else {
-			jni.ThrowException(fmt.Sprintf("%s method %s return { %s  }  not support", n.sCls, mName, jsig))
+			panic(fmt.Sprintf("%s method %s return { %s  }  not support", n.sCls, mName, jsig))
 		}
 	}
 }
@@ -235,10 +235,10 @@ func (n *nativeWarp) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
 func (n *nativeWarp) CheckType(i int, mName string, def string, jsig string, gTyp reflect.Type) {
 	if v, b := checkMap[jsig]; !b || v != gTyp {
 		if b {
-			jni.ThrowException(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmust use go type ==> %s",
+			panic(fmt.Sprintf("\n%s method %s definition { %s %d } not match go type {%s} \nmust use go type ==> %s",
 				n.sCls, mName, def, i, gTyp, v))
 		} else {
-			jni.ThrowException(fmt.Sprintf("%s method %s definition { %s %d } sig %s not support", n.sCls, mName, def, i, jsig))
+			panic(fmt.Sprintf("%s method %s definition { %s %d } sig %s not support", n.sCls, mName, def, i, jsig))
 		}
 	}
 }
@@ -247,7 +247,7 @@ func (n *nativeWarp) Done() {
 	if n.env.RegisterNatives(n.jCls, n.natives) < 0 {
 		fmt.Println("java class: ", n.sCls)
 		n.printNative()
-		jni.ThrowException("RegisterNatives error \nplease check java nativeWarp define ")
+		panic("RegisterNatives error \nplease check java nativeWarp define ")
 	}
 }
 
