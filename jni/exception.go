@@ -38,7 +38,7 @@ func ThrowException(msg string) {
 }
 
 func JavaThrowException(env Env, code JavaExceptionCodes, msg string) {
-	env.ExceptionClear()
+	CheckException(env)
 	if cls, b := exceptionMap[code]; b {
 		jcls := env.FindClass(cls)
 		env.ThrowNew(jcls, msg+" [from native]")
@@ -99,5 +99,6 @@ func CheckNull(uin uintptr, msg string) {
 func CheckException(env Env) {
 	if env.ExceptionCheck() {
 		PrintException(env, env.ExceptionOccurred())
+		panic("CheckException")
 	}
 }

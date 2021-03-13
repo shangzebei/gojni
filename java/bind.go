@@ -149,6 +149,9 @@ func (reg *Register) WithClass(cls string) *nativeWarp {
 func withClass(cls string) *nativeWarp {
 	env := jni.AutoGetCurrentThreadEnv()
 	jCls := env.FindClass(strings.ReplaceAll(cls, ".", "/"))
+	if jCls == 0 {
+		jni.ThrowException(fmt.Sprintf("not find class %s", cls))
+	}
 	return &nativeWarp{jCls: jCls, sCls: cls, env: env}
 }
 
