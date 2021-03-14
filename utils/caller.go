@@ -2,9 +2,10 @@ package utils
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/jni"
 	"reflect"
 	"strings"
+
+	"gitee.com/aifuturewell/gojni/jni"
 )
 
 var methods map[string]reflect.Method
@@ -78,5 +79,5 @@ func GetFormatCallFunc(format string, siged string) string {
 		orig = v
 	}
 	//fmt.Println(siged,orig)
-	return fmt.Sprintf("Call%sMethodA", orig)
+	return fmt.Sprintf(format, orig)
 }

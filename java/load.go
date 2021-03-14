@@ -2,8 +2,9 @@ package java
 
 import "C"
 import (
-	"gitee.com/aifuturewell/gojni/jni"
 	"runtime"
+
+	"gitee.com/aifuturewell/gojni/jni"
 )
 
 var onLoads []func(reg Register)
@@ -16,14 +17,15 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 	jni.InitJNI(vm)
 	r := Register{vm: jni.VM(vm)}
 	for _, f := range onLoads {
-		go func() {
-			defer func() {
-				if err := recover(); err != nil {
-					jni.ThrowException(err.(error).Error())
-				}
-			}()
-			f(r)
-		}()
+		// go func(reg Register) {
+		// 	defer func() {
+		// 		if err := recover(); err != nil {
+		// 			jni.ThrowException(err.(error).Error())
+		// 		}
+		// 	}()
+		// 	f(reg)
+		// }(r)
+		f(r)
 	}
 	if _, v := jni.VM(vm).GetEnv(jni.JNI_VERSION_1_6); v != jni.JNI_OK {
 		panic("JNI_OnLoad error")

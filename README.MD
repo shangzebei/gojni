@@ -40,6 +40,10 @@ public class Hello {
 CGO_CFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux" go build -buildmode=c-shared -o libtest.so
 LD_LIBRARY_PATH=. java com.nk.Hello
 ```
+or
+```shell
+go env -w CGO_CFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/$(go env GOHOSTOS) -g -O2"
+```
 
 ### 2.native invoke java
 ```go
