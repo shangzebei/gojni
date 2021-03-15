@@ -17,6 +17,7 @@ func TestSig(t *testing.T) {
 func TestSigned(t *testing.T) {
 	//int(java.lang.String)
 	fmt.Println(EncodeToSig("int(java.lang.String)").ParamTyp)
+	fmt.Println(EncodeToSig("void(java.lang.String)"))
 }
 
 var sigTest = map[string]string{

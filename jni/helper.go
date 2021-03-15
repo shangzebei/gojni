@@ -21,12 +21,12 @@ func PopLocalFrame(env Env) {
 
 //export log_info
 func log_info(v *C.char) {
-	log.Println(C.GoString(v))
+	panic(C.GoString(v))
 }
 
 //export log_fatal
 func log_fatal(v *C.char) {
-	log.Fatal(C.GoString(v))
+	panic(C.GoString(v))
 }
 
 func SetVm(mVm VM) {

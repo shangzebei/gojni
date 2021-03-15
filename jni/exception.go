@@ -34,14 +34,27 @@ var exceptionMap = map[JavaExceptionCodes]string{
 }
 
 func ThrowException(msg string) {
-	JavaThrowException(AutoGetCurrentThreadEnv(), JavaException, msg+"\n"+string(debug.Stack()))
+	NativeThrowException(AutoGetCurrentThreadEnv(), JavaException, msg+"\n"+string(debug.Stack()))
 }
 
-func JavaThrowException(env Env, code JavaExceptionCodes, msg string) {
+func JavaThrowException(msg string) {
+	env := AutoGetCurrentThreadEnv()
+	jCls := env.FindClass("java/lang/Exception")
+	if jCls == 0 {
+		panic("not find java/lang/Exception")
+	}
+	jMethodID := env.GetMethodID(jCls, "<init>", "(Ljava/lang/String;)V")
+	job := env.NewObjectA(jCls, jMethodID, Jvalue(env.NewString(msg)))
+	jPrint := env.GetMethodID(jCls, "printStackTrace", "()V")
+	env.CallVoidMethodA(job, jPrint)
+}
+
+func NativeThrowException(env Env, code JavaExceptionCodes, msg string) {
 	CheckException(env)
 	if cls, b := exceptionMap[code]; b {
 		jcls := env.FindClass(cls)
-		env.ThrowNew(jcls, msg+" [from native]")
+		ok := env.ThrowNew(jcls, msg+" [from native]")
+		fmt.Println(ok)
 	}
 }
 
@@ -83,7 +96,7 @@ func CheckNullException(msg string, ok func(env Env), checkNull ...uintptr) {
 	}
 	env := AutoGetCurrentThreadEnv()
 	if has {
-		JavaThrowException(env, JavaNullPointerException, msg+s)
+		NativeThrowException(env, JavaNullPointerException, msg+s)
 	} else {
 		ok(env)
 	}
@@ -92,7 +105,7 @@ func CheckNullException(msg string, ok func(env Env), checkNull ...uintptr) {
 func CheckNull(uin uintptr, msg string) {
 	if uin == 0 {
 		env := AutoGetCurrentThreadEnv()
-		JavaThrowException(env, JavaNullPointerException, msg)
+		NativeThrowException(env, JavaNullPointerException, msg)
 	}
 }
 

@@ -139,6 +139,10 @@ type Register struct {
 	vm jni.VM
 }
 
+func (reg *Register) GetVm() jni.VM {
+	return reg.vm
+}
+
 func (reg *Register) WithClass(cls string) *nativeWarp {
 	if reg.vm == 0 {
 		panic("forbid")

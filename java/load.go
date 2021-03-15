@@ -2,13 +2,27 @@ package java
 
 import "C"
 import (
-	"runtime"
-
 	"gitee.com/aifuturewell/gojni/jni"
+	"os"
+	"runtime"
+	"runtime/debug"
+	"time"
 )
 
 var onLoads []func(reg Register)
 var onUnLoads []func()
+var eg = `
+######################### GOJNI ERROR ############################
+
+func init() {
+	java.OnLoad(func(reg java.Register) {
+		...
+	})
+}
+
+###################################################################
+
+`
 
 //export JNI_OnLoad
 func JNI_OnLoad(vm uintptr, reserved uintptr) int {
@@ -16,17 +30,32 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 
 	jni.InitJNI(vm)
 	r := Register{vm: jni.VM(vm)}
-	for _, f := range onLoads {
-		// go func(reg Register) {
-		// 	defer func() {
-		// 		if err := recover(); err != nil {
-		// 			jni.ThrowException(err.(error).Error())
-		// 		}
-		// 	}()
-		// 	f(reg)
-		// }(r)
-		f(r)
+	if len(onLoads) == 0 {
+		go func() {
+			jni.JavaThrowException("you mast impl java.Onload on func init ." + "\n" + eg)
+			time.Sleep(time.Second * 2)
+			os.Exit(0)
+		}()
 	}
+
+	for _, f := range onLoads {
+		go func(reg Register) {
+			defer func() {
+				if err := recover(); err != nil {
+					msg := "error"
+					if e, b := err.(error); b {
+						msg = e.Error()
+					}
+					if e, b := err.(string); b {
+						msg = e
+					}
+					jni.JavaThrowException(msg + "\n" + string(debug.Stack()))
+				}
+			}()
+			f(reg)
+		}(r)
+	}
+
 	if _, v := jni.VM(vm).GetEnv(jni.JNI_VERSION_1_6); v != jni.JNI_OK {
 		panic("JNI_OnLoad error")
 		return -1
