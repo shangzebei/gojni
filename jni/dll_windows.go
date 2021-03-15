@@ -46,17 +46,21 @@ func GetSelfPath() string {
 	return string(buf[0:size])
 }
 
-var wVm VM
-
 func InitJNI(jvm uintptr) {
-	wVm = VM(jvm)
+	SetVm(VM(jvm))
 }
 
-func AutoGetCurrentThreadEnv() Env {
-	if env, v := wVm.GetEnv(JNI_VERSION_1_6); v == JNI_OK {
-		return env
-	} else {
-		panic("JNI_OnLoad error")
-		return 0
+func AutoGetCurrentThreadEnv() *Env {
+	if wVm == 0 {
+		panic("please invoke after onload")
 	}
+	if env, v := wVm.GetEnv(JNI_VERSION_1_6); v == JNI_OK {
+		return &env
+	} else if env, ok := wVm.AttachCurrentThread(); ok == JNI_OK {
+		return &env
+	} else {
+		panic("AutoGetCurrentThreadEnv ERROR")
+		return nil
+	}
+
 }

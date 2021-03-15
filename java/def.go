@@ -470,7 +470,7 @@ func convertParam(f method, params ...uintptr) []reflect.Value {
 	return ret
 }
 
-func convertParamSlice(env jni.Env, Array reflect.Type, p uintptr) reflect.Value {
+func convertParamSlice(env *jni.Env, Array reflect.Type, p uintptr) reflect.Value {
 
 	iLen := env.GetArrayLength(p)
 	item := Array.Elem()

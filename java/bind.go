@@ -92,7 +92,7 @@ import (
 type nativeWarp struct {
 	sCls    string
 	jCls    jni.Jclass
-	env     jni.Env
+	env     *jni.Env
 	natives []jni.JNINativeMethod
 }
 

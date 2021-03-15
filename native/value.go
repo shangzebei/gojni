@@ -78,7 +78,7 @@ func invoke(cls classMeta, jobj jni.Jobject, callFormal string, name string, sig
 	}
 	sType := sm.RetTyp.GetSigType()
 	defArgs := []interface{}{
-		env, jobj, jMethod,
+		*env, jobj, jMethod,
 	}
 	defArgs = append(defArgs, args...)
 	ret := utils.CallJni(utils.GetFormatCallFunc(callFormal, sType), defArgs...)

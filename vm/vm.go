@@ -13,7 +13,7 @@ import (
 )
 
 type VM struct {
-	env        jni.Env
+	env        *jni.Env
 	tempResult interface{}
 	objs       ojbHeap
 	methods    map[string]reflect.Method
@@ -97,7 +97,7 @@ func (vm *VM) doCall(c *jparser.Call) native.Value {
 	case jparser.STATICOJB:
 		jMethod := vm.env.GetStaticMethodID(jCls, c.Method.Name, c.Method.Sig.Sig)
 		jni.CheckNull(jMethod, fmt.Sprintf("not find static method %s [ %s ]", c.Method.Name, c.Method.Sig))
-		ret := utils.CallJni(utils.GetFormatCallFunc("CallStatic%sMethodA", sig), vm.env, jCls, jMethod)
+		ret := utils.CallJni(utils.GetFormatCallFunc("CallStatic%sMethodA", sig), *vm.env, jCls, jMethod)
 		return native.NewValue(c.Method.Sig.RetTyp, ret)
 	case jparser.NEWOBJECT:
 		jMethod := vm.env.GetMethodID(jCls, c.Method.Name, c.Method.Sig.Sig)
@@ -112,13 +112,13 @@ func (vm *VM) doCall(c *jparser.Call) native.Value {
 			})
 		}
 		jni.CheckNull(jObj, "obj is null")
-		ret := utils.CallJni(utils.GetFormatCallFunc("Call%sMethodA", sig), vm.env, jObj, jMethod)
+		ret := utils.CallJni(utils.GetFormatCallFunc("Call%sMethodA", sig), *vm.env, jObj, jMethod)
 		return native.NewValue(c.Method.Sig.RetTyp, ret)
 	case jparser.OBJECTINVOKE:
 		jni.CheckNull(jObj, "obj is null")
 		jMethod := vm.env.GetMethodID(jCls, c.Method.Name, c.Method.Sig.Sig)
 		jni.CheckNull(jMethod, fmt.Sprintf("not find OBJECTINVOKE method %s", c.Method.Name))
-		ret := utils.CallJni(utils.GetFormatCallFunc("Call%sMethodA", sig), vm.env, jObj, jMethod)
+		ret := utils.CallJni(utils.GetFormatCallFunc("Call%sMethodA", sig), *vm.env, jObj, jMethod)
 		return native.NewValue(c.Method.Sig.RetTyp, ret)
 	default:
 		jni.ThrowException(fmt.Sprintf("not support ClassTyp %d ", c.ClassTyp))

@@ -4,14 +4,13 @@ import (
 	"fmt"
 	"gitee.com/aifuturewell/gojni/jni"
 	"gitee.com/aifuturewell/gojni/utils"
-
 	"reflect"
 	"strings"
 )
 
 type Class struct {
 	mClass classMeta
-	env    jni.Env
+	env    *jni.Env
 }
 
 type classMeta struct {
@@ -33,7 +32,8 @@ func LoadClass(name string) Class {
 	if jcls == 0 {
 		jni.ThrowException(fmt.Sprintf("not find class %s", name))
 	}
-	return Class{mClass: NewClassMeta(jcls, name), env: env}
+	class := Class{mClass: NewClassMeta(jcls, name), env: env}
+	return class
 }
 
 func (cls Class) New(args ...string) Object {
@@ -56,7 +56,7 @@ func (cls Class) StaticInvoke(name string, sig string, args ...interface{}) Valu
 	}
 	sType := sm.RetTyp.GetSigType()
 	defArgs := []interface{}{
-		env, cls.mClass.jcls, jMethod,
+		*env, cls.mClass.jcls, jMethod,
 	}
 	defArgs = append(defArgs, args...)
 	ret := utils.CallJni(utils.GetFormatCallFunc("CallStatic%sMethodA", sType), defArgs...)

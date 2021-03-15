@@ -37,7 +37,6 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 			os.Exit(0)
 		}()
 	}
-
 	for _, f := range onLoads {
 		go func(reg Register) {
 			defer func() {

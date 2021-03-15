@@ -58,11 +58,15 @@ import (
 )
 
 func InitJNI(jvm uintptr) {
+	SetVm(jvm)
 	C.init((*C.JavaVM)(unsafe.Pointer(jvm)))
 }
 
-func AutoGetCurrentThreadEnv() Env {
-	return Env(unsafe.Pointer(C.go_seq_get_thread_env()))
+func AutoGetCurrentThreadEnv() *Env {
+	if wVm == 0 {
+		panic("please invoke after onload")
+	}
+	return &Env(unsafe.Pointer(C.go_seq_get_thread_env()))
 }
 
 func GetSelfPath() string {

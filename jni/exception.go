@@ -49,7 +49,7 @@ func JavaThrowException(msg string) {
 	env.CallVoidMethodA(job, jPrint)
 }
 
-func NativeThrowException(env Env, code JavaExceptionCodes, msg string) {
+func NativeThrowException(env *Env, code JavaExceptionCodes, msg string) {
 	CheckException(env)
 	if cls, b := exceptionMap[code]; b {
 		jcls := env.FindClass(cls)
@@ -71,7 +71,7 @@ func ExceptionMessageFromThrowable(JNIEnv Env, jthrowable Jthrowable) Jstring {
 	return 0
 }
 
-func PrintException(JNIEnv Env, jthrowable Jthrowable) {
+func PrintException(JNIEnv *Env, jthrowable Jthrowable) {
 	if jthrowable == 0 {
 		return
 	}
@@ -84,7 +84,7 @@ func PrintException(JNIEnv Env, jthrowable Jthrowable) {
 /**
  *
  */
-func CheckNullException(msg string, ok func(env Env), checkNull ...uintptr) {
+func CheckNullException(msg string, ok func(env *Env), checkNull ...uintptr) {
 	has := false
 	s := ""
 	for i, u := range checkNull {
@@ -109,7 +109,7 @@ func CheckNull(uin uintptr, msg string) {
 	}
 }
 
-func CheckException(env Env) {
+func CheckException(env *Env) {
 	if env.ExceptionCheck() {
 		PrintException(env, env.ExceptionOccurred())
 		panic("CheckException")
