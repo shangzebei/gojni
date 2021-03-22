@@ -62,8 +62,20 @@ type Object struct {
 	v      Value
 }
 
+func (obj Object) ToUintPtr() uintptr {
+	i := obj.v.v.Interface().(uintptr)
+	if i == 0 {
+		jni.ThrowException("obj is null")
+	}
+	return i
+}
+
 func (obj Object) Invoke(name string, sig string, args ...interface{}) Value {
-	return invoke(obj.mClass, obj.v.v.Interface().(uintptr), "Call%sMethodA", name, sig, args...)
+	u := obj.v.v.Interface().(uintptr)
+	if u == 0 {
+		jni.ThrowException("value is null")
+	}
+	return invoke(obj.mClass, u, "Call%sMethodA", name, sig, args...)
 }
 
 func invoke(cls classMeta, jobj jni.Jobject, callFormal string, name string, sig string, args ...interface{}) Value {

@@ -32,8 +32,13 @@ static inline jint DetachCurrentThread(JavaVM * vm) {
     return (*vm)->DetachCurrentThread(vm);
 }
 
+//jclass DefineClass(JNIEnv *env, const char *name, jobject loader,const jbyte *buf, jsize bufLen);
+static inline jclass DefineClass(JNIEnv *env, const char *name, jobject loader,const jbyte *buf, jsize bufLen) {
+	return (*env)->DefineClass(env,name,loader,buf,bufLen);
+}
+
 static inline jclass FindClass(JNIEnv * env, char * name) {
-    return (*env)->FindClass(env, name);
+   return (*env)->FindClass(env, name);
 }
 
 static inline jint GetVersion(JNIEnv * env) {
@@ -956,9 +961,18 @@ func (vm VM) DetachCurrentThread() int {
 }
 
 func (env Env) FindClass(name string) Jclass {
-	cstr_name := C.CString(name)
-	defer C.free(unsafe.Pointer(cstr_name))
-	return Jclass(C.FindClass((*C.JNIEnv)(unsafe.Pointer(env)), cstr_name))
+	ctrName := C.CString(name)
+	defer CFree(unsafe.Pointer(ctrName))
+	return Jclass(C.FindClass((*C.JNIEnv)(unsafe.Pointer(env)), ctrName))
+}
+
+//DefineClass(JNIEnv *env, const char *name, jobject loader,const jbyte *buf, jsize bufLen)
+func (env Env) DefineClass(name string, loader Jobject, buf []byte) Jclass {
+	ctrName := C.CString(name)
+	defer CFree(unsafe.Pointer(ctrName))
+	cBytes := C.CBytes(buf)
+	defer CFree(unsafe.Pointer(cBytes))
+	return Jclass(C.DefineClass((*C.JNIEnv)(unsafe.Pointer(env)), ctrName, C.jobject(loader), (*C.jbyte)(cBytes), C.int(len(buf))))
 }
 
 func (env Env) GetVersion() int {
@@ -994,9 +1008,9 @@ func (env Env) Throw(obj Jthrowable) int {
 }
 
 func (env Env) ThrowNew(clazz Jclass, msg string) int {
-	cstr_msg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cstr_msg))
-	return int(C.ThrowNew((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), cstr_msg))
+	ctrMsg := C.CString(msg)
+	defer C.free(unsafe.Pointer(ctrMsg))
+	return int(C.ThrowNew((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), ctrMsg))
 }
 
 func (env Env) ExceptionOccurred() Jthrowable {
@@ -1012,9 +1026,9 @@ func (env Env) ExceptionClear() {
 }
 
 func (env Env) FatalError(msg string) {
-	cstr_msg := C.CString(msg)
-	defer C.free(unsafe.Pointer(cstr_msg))
-	C.FatalError((*C.JNIEnv)(unsafe.Pointer(env)), cstr_msg)
+	ctrMsg := C.CString(msg)
+	defer C.free(unsafe.Pointer(ctrMsg))
+	C.FatalError((*C.JNIEnv)(unsafe.Pointer(env)), ctrMsg)
 }
 
 func (env Env) PushLocalFrame(capacity int) int {
@@ -1066,11 +1080,11 @@ func (env Env) IsInstanceOf(obj Jobject, clazz Jclass) bool {
 }
 
 func (env Env) GetMethodID(clazz Jclass, name string, sig string) JmethodID {
-	cstr_name := C.CString(name)
-	defer C.free(unsafe.Pointer(cstr_name))
-	cstr_sig := C.CString(sig)
-	defer C.free(unsafe.Pointer(cstr_sig))
-	return JmethodID(unsafe.Pointer(C.GetMethodID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), cstr_name, cstr_sig)))
+	ctrName := C.CString(name)
+	defer C.free(unsafe.Pointer(ctrName))
+	ctrSig := C.CString(sig)
+	defer C.free(unsafe.Pointer(ctrSig))
+	return JmethodID(unsafe.Pointer(C.GetMethodID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), ctrName, ctrSig)))
 }
 
 func (env Env) CallObjectMethodA(obj Jobject, methodID JmethodID, args ...Jvalue) Jobject {
@@ -1154,11 +1168,11 @@ func (env Env) CallNonvirtualVoidMethodA(obj Jobject, clazz Jclass, methodID Jme
 }
 
 func (env Env) GetFieldID(clazz Jclass, name string, sig string) JfieldID {
-	cstr_name := C.CString(name)
-	defer C.free(unsafe.Pointer(cstr_name))
-	cstr_sig := C.CString(sig)
-	defer C.free(unsafe.Pointer(cstr_sig))
-	return JfieldID(unsafe.Pointer(C.GetFieldID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), cstr_name, cstr_sig)))
+	ctrName := C.CString(name)
+	defer C.free(unsafe.Pointer(ctrName))
+	ctrSig := C.CString(sig)
+	defer C.free(unsafe.Pointer(ctrSig))
+	return JfieldID(unsafe.Pointer(C.GetFieldID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), ctrName, ctrSig)))
 }
 
 func (env Env) GetObjectField(obj Jobject, fieldID JfieldID) Jobject {
@@ -1234,11 +1248,11 @@ func (env Env) SetDoubleField(obj Jobject, fieldID JfieldID, val float64) {
 }
 
 func (env Env) GetStaticMethodID(clazz Jclass, name string, sig string) JmethodID {
-	cstr_name := C.CString(name)
-	defer C.free(unsafe.Pointer(cstr_name))
-	cstr_sig := C.CString(sig)
-	defer C.free(unsafe.Pointer(cstr_sig))
-	return JmethodID(unsafe.Pointer(C.GetStaticMethodID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), cstr_name, cstr_sig)))
+	ctrName := C.CString(name)
+	defer C.free(unsafe.Pointer(ctrName))
+	ctrSig := C.CString(sig)
+	defer C.free(unsafe.Pointer(ctrSig))
+	return JmethodID(unsafe.Pointer(C.GetStaticMethodID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), ctrName, ctrSig)))
 }
 
 func (env Env) CallStaticObjectMethodA(clazz Jclass, methodID JmethodID, args ...Jvalue) Jobject {
@@ -1282,11 +1296,11 @@ func (env Env) CallStaticVoidMethodA(cls Jclass, methodID JmethodID, args ...Jva
 }
 
 func (env Env) GetStaticFieldID(clazz Jclass, name string, sig string) JfieldID {
-	cstr_name := C.CString(name)
-	defer C.free(unsafe.Pointer(cstr_name))
-	cstr_sig := C.CString(sig)
-	defer C.free(unsafe.Pointer(cstr_sig))
-	return JfieldID(unsafe.Pointer(C.GetStaticFieldID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), cstr_name, cstr_sig)))
+	ctrName := C.CString(name)
+	defer C.free(unsafe.Pointer(ctrName))
+	ctrSig := C.CString(sig)
+	defer C.free(unsafe.Pointer(ctrSig))
+	return JfieldID(unsafe.Pointer(C.GetStaticFieldID((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(clazz), ctrName, ctrSig)))
 }
 
 func (env Env) GetStaticObjectField(clazz Jclass, fieldID JfieldID) Jobject {
@@ -1518,21 +1532,21 @@ func (j *JNINativeMethod) String() string {
 //jclass clazz, const JNINativeMethod* methods, jint nMethods
 func (env Env) RegisterNatives(class Jclass, methods []JNINativeMethod) int {
 	len := len(methods)
-	var kk [100]C.JNINativeMethod
+	var nativeMethods [100]C.JNINativeMethod
 	//var free [100]unsafe.Pointer
 	for i := 0; i < len; i++ {
 		s := methods[i]
 		_name := C.CString(s.Name)
 		_signature := C.CString(s.Sig)
-		kk[i] = C.JNINativeMethod{
+		nativeMethods[i] = C.JNINativeMethod{
 			name:      _name,
 			signature: _signature,
 			fnPtr:     s.FnPtr,
 		}
 	}
-	i := int(C.RegisterNatives((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(class), (*C.JNINativeMethod)(unsafe.Pointer(&kk)), C.jint(len)))
-	//for _, fr := range free {
-	//	C.free(fr)
+	i := int(C.RegisterNatives((*C.JNIEnv)(unsafe.Pointer(env)), C.jclass(class), (*C.JNINativeMethod)(unsafe.Pointer(&nativeMethods)), C.jint(len)))
+	//for i := 0; i < len; i++ {
+	//	CFree()
 	//}
 	return i
 }

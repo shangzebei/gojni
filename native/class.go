@@ -6,6 +6,7 @@ import (
 	"gitee.com/aifuturewell/gojni/utils"
 	"reflect"
 	"strings"
+	"sync"
 )
 
 type Class struct {
@@ -31,6 +32,29 @@ func LoadClass(name string) Class {
 	jcls := env.FindClass(name)
 	if jcls == 0 {
 		jni.ThrowException(fmt.Sprintf("not find class %s", name))
+	}
+	class := Class{mClass: NewClassMeta(jcls, name), env: env}
+	return class
+}
+
+var (
+	classLoader Object
+	once        sync.Once
+)
+
+func getClassLoader() {
+	classLoader = LoadClass("java.lang.ClassLoader").StaticInvoke("getSystemClassLoader", "java.lang.ClassLoader()").AsObject()
+}
+
+func LoadClassBytes(name string, bytes []byte) Class {
+	once.Do(func() {
+		getClassLoader()
+	})
+	env := jni.AutoGetCurrentThreadEnv()
+	name = strings.ReplaceAll(name, ".", "/")
+	jcls := env.DefineClass(name, classLoader.ToUintPtr(), bytes)
+	if jcls == 0 {
+		jni.ThrowException(fmt.Sprintf("not DefineClass class %s", name))
 	}
 	class := Class{mClass: NewClassMeta(jcls, name), env: env}
 	return class
