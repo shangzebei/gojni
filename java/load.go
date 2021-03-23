@@ -9,7 +9,10 @@ import (
 	"time"
 )
 
-var onLoads []func(reg Register)
+type FRegister func(reg Register)
+
+var onLoads []FRegister
+var onMainLoads []FRegister
 var onUnLoads []func()
 var eg = `
 ######################### GOJNI ERROR ############################
@@ -30,13 +33,14 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 
 	jni.InitJNI(vm)
 	r := Register{vm: jni.VM(vm)}
-	if len(onLoads) == 0 {
+	if len(onLoads) == 0 && len(onMainLoads) == 0 {
 		go func() {
 			jni.JavaThrowException("you mast impl java.Onload on func init ." + "\n" + eg)
 			time.Sleep(time.Second * 2)
 			os.Exit(0)
 		}()
 	}
+
 	for _, f := range onLoads {
 		go func(reg Register) {
 			defer func() {
@@ -55,6 +59,11 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 		}(r)
 	}
 
+	//run on main thread
+	for _, load := range onMainLoads {
+		load(r)
+	}
+
 	if _, v := jni.VM(vm).GetEnv(jni.JNI_VERSION_1_6); v != jni.JNI_OK {
 		panic("JNI_OnLoad error")
 		return -1
@@ -70,8 +79,12 @@ func JNI_OnUnload(vm uintptr, reserved uintptr) {
 	runtime.UnlockOSThread()
 }
 
-func OnLoad(f func(reg Register)) {
+func OnLoad(f FRegister) {
 	onLoads = append(onLoads, f)
+}
+
+func OnMainLoad(f FRegister) {
+	onMainLoads = append(onMainLoads, f)
 }
 
 func OnUnload(f func()) {
