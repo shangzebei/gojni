@@ -966,13 +966,13 @@ func (env Env) FindClass(name string) Jclass {
 	return Jclass(C.FindClass((*C.JNIEnv)(unsafe.Pointer(env)), ctrName))
 }
 
-//DefineClass(JNIEnv *env, const char *name, jobject loader,const jbyte *buf, jsize bufLen)
+// DefineClass DefineClass(JNIEnv *env, const char *name, jobject loader,const jbyte *buf, jsize bufLen)
 func (env Env) DefineClass(name string, loader Jobject, buf []byte) Jclass {
 	ctrName := C.CString(name)
 	defer CFree(unsafe.Pointer(ctrName))
 	cBytes := C.CBytes(buf)
 	defer CFree(unsafe.Pointer(cBytes))
-	return Jclass(C.DefineClass((*C.JNIEnv)(unsafe.Pointer(env)), ctrName, C.jobject(loader), (*C.jbyte)(cBytes), C.int(len(buf))))
+	return Jclass(C.DefineClass((*C.JNIEnv)(unsafe.Pointer(env)), ctrName, C.jobject(loader), (*C.jbyte)(cBytes), C.long(len(buf))))
 }
 
 func (env Env) GetVersion() int {
