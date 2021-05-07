@@ -29,7 +29,7 @@ func NewSig(typeName string) *Sig {
 	}
 }
 
-//Lcom/android/thread;
+// SigOf Lcom/android/thread;
 func SigOf(siged string) *Sig {
 	var otyp string
 	if s, b := utils.SigDecodeMap[siged]; b {

@@ -115,9 +115,9 @@ var nMap = map[int][]unsafe.Pointer{
 	7:  {C.a7, C.b7, C.c7, C.d7, C.e7, C.f7, C.g7},
 	8:  {C.a8, C.b8, C.c8, C.d8, C.e8, C.f8, C.g8},
 	9:  {C.a9, C.b9, C.c9, C.d9, C.e9, C.f9, C.g9},
-	10: {C.a10, C.b10, C.c10, C.e10, C.f10, C.g10},
-	11: {C.a11, C.b11, C.c11, C.e11, C.f11, C.g11},
-	12: {C.a12, C.b12, C.c12, C.e12, C.f12, C.g12},
+	10: {C.a10, C.b10, C.c10, C.d10, C.e10, C.f10, C.g10},
+	11: {C.a11, C.b11, C.c11, C.d11, C.e11, C.f11, C.g11},
+	12: {C.a12, C.b12, C.c12, C.d12, C.e12, C.f12, C.g12},
 }
 
 var (
