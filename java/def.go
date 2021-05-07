@@ -341,6 +341,7 @@ func g10(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10 uintptr) uintptr {
 }
 
 /////////////////////////////11/////////////////////////////////////
+
 //export a11
 func a11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
 	return router("a11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
@@ -497,7 +498,7 @@ func convertParamSlice(env *jni.Env, Array reflect.Type, p uintptr) reflect.Valu
 		head.Len /= iTypes
 		return reflect.ValueOf(*(*[]int32)(unsafe.Pointer(head)))
 	case reflect.String:
-		var temp []string = make([]string, iLen)
+		var temp = make([]string, iLen)
 		for i := 0; i < iLen; i++ {
 			temp[i] = string(env.GetStringUTF(env.GetObjectArrayElement(p, i)))
 		}
