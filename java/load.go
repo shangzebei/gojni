@@ -32,7 +32,7 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 	runtime.LockOSThread()
 
 	jni.InitJNI(vm)
-	r := Register{vm: jni.VM(vm)}
+	var r Register = &registerImpl{vm: jni.VM(vm)}
 	if len(onLoads) == 0 && len(onMainLoads) == 0 {
 		go func() {
 			jni.JavaThrowException("you mast impl java.Onload on func init ." + "\n" + eg)
@@ -41,6 +41,7 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 		}()
 	}
 
+	//run on other thread
 	for _, f := range onLoads {
 		go func(reg Register) {
 			defer func() {
@@ -56,12 +57,14 @@ func JNI_OnLoad(vm uintptr, reserved uintptr) int {
 				}
 			}()
 			f(reg)
+			reg.Done()
 		}(r)
 	}
 
 	//run on main thread
 	for _, load := range onMainLoads {
 		load(r)
+		r.Done()
 	}
 
 	if _, v := jni.VM(vm).GetEnv(jni.JNI_VERSION_1_6); v != jni.JNI_OK {
@@ -79,14 +82,17 @@ func JNI_OnUnload(vm uintptr, reserved uintptr) {
 	runtime.UnlockOSThread()
 }
 
+// OnLoad used in golang code but running on other thread
 func OnLoad(f FRegister) {
 	onLoads = append(onLoads, f)
 }
 
+// OnMainLoad used in golang code and running on main thread
 func OnMainLoad(f FRegister) {
 	onMainLoads = append(onMainLoads, f)
 }
 
+// OnUnload used in golang code when jvm OnUnload
 func OnUnload(f func()) {
 	onUnLoads = append(onUnLoads, f)
 }

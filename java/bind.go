@@ -90,10 +90,11 @@ import (
 )
 
 type nativeWarp struct {
-	sCls    string
-	jCls    jni.Jclass
-	env     *jni.Env
-	natives []jni.JNINativeMethod
+	sCls         string
+	jCls         jni.Jclass
+	env          *jni.Env
+	natives      []jni.JNINativeMethod
+	isRegistered bool
 }
 
 type method struct {
@@ -121,8 +122,8 @@ var nMap = map[int][]unsafe.Pointer{
 }
 
 var (
-	fMappers   map[string]method
-	statistics map[int]int
+	statistics = make(map[int]int)
+	fMappers   = make(map[string]method)
 )
 
 const (
@@ -130,24 +131,33 @@ const (
 	max_dep   = 6
 )
 
-func init() {
-	statistics = make(map[int]int)
-	fMappers = make(map[string]method)
+type Register interface {
+	GetVm() jni.VM
+	WithClass(cls string) *nativeWarp
+	Done()
 }
 
-type Register struct {
-	vm jni.VM
+type registerImpl struct {
+	vm       jni.VM
+	instance *nativeWarp
 }
 
-func (reg *Register) GetVm() jni.VM {
+func (reg *registerImpl) GetVm() jni.VM {
 	return reg.vm
 }
 
-func (reg *Register) WithClass(cls string) *nativeWarp {
+func (reg *registerImpl) Done() {
+	if reg.instance != nil {
+		reg.instance.Done()
+	}
+}
+
+func (reg *registerImpl) WithClass(cls string) *nativeWarp {
 	if reg.vm == 0 {
 		panic("forbid")
 	}
-	return withClass(cls)
+	reg.instance = withClass(cls)
+	return reg.instance
 }
 
 func withClass(cls string) *nativeWarp {
@@ -217,12 +227,14 @@ var checkMap = map[string]reflect.Type{
 	"[J":                  reflect.TypeOf((*[]int)(nil)).Elem(),
 	"[F":                  reflect.TypeOf((*[]float32)(nil)).Elem(),
 	"[D":                  reflect.TypeOf((*[]float64)(nil)).Elem(),
+
 	"I":                   reflect.TypeOf((*int32)(nil)).Elem(),
 	"Ljava/lang/String;":  reflect.TypeOf((*string)(nil)).Elem(),
 	"B":                   reflect.TypeOf((*byte)(nil)).Elem(),
 	"J":                   reflect.TypeOf((*int)(nil)).Elem(),
-	"F":                   reflect.TypeOf((*float32)(nil)).Elem(),
-	"D":                   reflect.TypeOf((*float64)(nil)).Elem(),
+	"Z":                   reflect.TypeOf((*bool)(nil)).Elem(),
+	//"F":                   reflect.TypeOf((*float32)(nil)).Elem(),
+	//"D":                   reflect.TypeOf((*float64)(nil)).Elem(),
 }
 
 func (n *nativeWarp) CheckReturn(mName string, jsig string, gTyp reflect.Type) {
@@ -248,10 +260,12 @@ func (n *nativeWarp) CheckType(i int, mName string, def string, jsig string, gTy
 }
 
 func (n *nativeWarp) Done() {
-	if n.env.RegisterNatives(n.jCls, n.natives) < 0 {
+	if n.env.RegisterNatives(n.jCls, n.natives) < 0 && !n.isRegistered {
 		fmt.Println("java class: ", n.sCls)
 		n.printNative()
 		panic("RegisterNatives error \nplease check java nativeWarp define ")
+	} else {
+		n.isRegistered = true
 	}
 }
 

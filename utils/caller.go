@@ -8,7 +8,7 @@ import (
 	"gitee.com/aifuturewell/gojni/jni"
 )
 
-var methods map[string]reflect.Method
+var methods = make(map[string]reflect.Method)
 
 func GetJNIMethods() map[string]reflect.Method {
 	return methods
@@ -24,7 +24,6 @@ func GetMethodWithName(name string) *reflect.Method {
 
 func init() {
 	var vm jni.Env
-	methods = make(map[string]reflect.Method)
 	f := reflect.TypeOf(vm)
 	for i := 0; i < f.NumMethod(); i++ {
 		m := f.Method(i)
@@ -56,6 +55,8 @@ func CallJni(format string, args ...interface{}) reflect.Value {
 }
 
 //TODO not impl
+
+// JabValueToUint return convert
 func JabValueToUint(r reflect.Value) uintptr {
 	env := jni.AutoGetCurrentThreadEnv()
 	switch r.Type().Kind() {
@@ -65,9 +66,11 @@ func JabValueToUint(r reflect.Value) uintptr {
 		return uintptr(r.Int())
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return uintptr(r.Uint())
-	case reflect.Float32, reflect.Float64:
-		//fmt.Println(reflect.ValueOf(20.65).Addr().Pointer())
-		return uintptr(r.Float())
+	case reflect.Bool:
+		if r.Bool(){
+			return jni.JNI_TRUE
+		}
+		return jni.JNI_FALSE
 	default:
 		panic(fmt.Sprintf("Return not support type %s", r.Kind().String()))
 	}

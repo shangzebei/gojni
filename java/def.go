@@ -270,37 +270,37 @@ func g8(p1, p2, p3, p4, p5, p6, p7, p8 uintptr) uintptr {
 
 //export a9
 func a9(p1, p2, p3, p4, p5, p6, p7, p8, p9 uintptr) uintptr {
-	return router("a9", 1, p2, p3, p4, p5, p6, p7, p8, p9)
+	return router("a9", p1, p2, p3, p4, p5, p6, p7, p8, p9)
 }
 
 //export b9
 func b9(p1, p2, p3, p4, p5, p6, p7, p8, p9 uintptr) uintptr {
-	return router("b9", 1, p2, p3, p4, p5, p6, p7, p8, p9)
+	return router("b9", p1, p2, p3, p4, p5, p6, p7, p8, p9)
 }
 
 //export c9
 func c9(p1, p2, p3, p4, p5, p6, p7, p8, p9 uintptr) uintptr {
-	return router("c9", 1, p2, p3, p4, p5, p6, p7, p8, p9)
+	return router("c9", p1, p2, p3, p4, p5, p6, p7, p8, p9)
 }
 
 //export d9
 func d9(p1, p2, p3, p4, p5, p6, p7, p8, p9 uintptr) uintptr {
-	return router("d9", 1, p2, p3, p4, p5, p6, p7, p8, p9)
+	return router("d9", p1, p2, p3, p4, p5, p6, p7, p8, p9)
 }
 
 //export e9
 func e9(p1, p2, p3, p4, p5, p6, p7, p8, p9 uintptr) uintptr {
-	return router("e9", 1, p2, p3, p4, p5, p6, p7, p8, p9)
+	return router("e9", p1, p2, p3, p4, p5, p6, p7, p8, p9)
 }
 
 //export f9
 func f9(p1, p2, p3, p4, p5, p6, p7, p8, p9 uintptr) uintptr {
-	return router("f9", 1, p2, p3, p4, p5, p6, p7, p8, p9)
+	return router("f9", p1, p2, p3, p4, p5, p6, p7, p8, p9)
 }
 
 //export g9
 func g9(p1, p2, p3, p4, p5, p6, p7, p8, p9 uintptr) uintptr {
-	return router("g9", 1, p2, p3, p4, p5, p6, p7, p8, p9)
+	return router("g9", p1, p2, p3, p4, p5, p6, p7, p8, p9)
 }
 
 //##############################################################
@@ -413,14 +413,6 @@ func g12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
 	return router("g12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
-////export a12
-//func a12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12 uintptr) uintptr {
-//	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12)
-//}
-////export a12
-//func a12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12 uintptr) uintptr {
-//	return router("a10", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10,p11,p12)
-//}
 //in c type
 func router(s string, p ...uintptr) uintptr {
 	defer func() {
@@ -433,6 +425,7 @@ func router(s string, p ...uintptr) uintptr {
 		if len(rValues) != 1 {
 			return 0
 		}
+		//convert return values
 		return utils.JabValueToUint(rValues[0])
 	}
 	return 0
@@ -450,13 +443,14 @@ func convertParam(f method, params ...uintptr) []reflect.Value {
 			ret = append(ret, reflect.ValueOf(int(p)))
 		case reflect.Int64:
 			ret = append(ret, reflect.ValueOf(int64(p)))
-		case reflect.Float32:
-			//FIXME Float32
-			//fmt.Println("float = ", (C.float)(unsafe.Pointer(p)))
-			ret = append(ret, reflect.ValueOf(float32(p)))
-		case reflect.Float64:
-			//FIXME float64
-			ret = append(ret, reflect.ValueOf(float64(p)))
+		case reflect.Bool:
+			if p == jni.JNI_TRUE {
+				ret = append(ret, reflect.ValueOf(true))
+			} else if p == jni.JNI_FALSE {
+				ret = append(ret, reflect.ValueOf(false))
+			} else {
+				panic("unknown bool")
+			}
 		case reflect.String:
 			jni.CheckNull(p, "jni input str is null")
 			pkg := string(env.GetStringUTF(p))
