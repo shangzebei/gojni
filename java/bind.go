@@ -156,6 +156,7 @@ func (reg *registerImpl) WithClass(cls string) *nativeWarp {
 	if reg.vm == 0 {
 		panic("forbid")
 	}
+	reg.Done()
 	reg.instance = withClass(cls)
 	return reg.instance
 }
@@ -228,11 +229,11 @@ var checkMap = map[string]reflect.Type{
 	"[F":                  reflect.TypeOf((*[]float32)(nil)).Elem(),
 	"[D":                  reflect.TypeOf((*[]float64)(nil)).Elem(),
 
-	"I":                   reflect.TypeOf((*int32)(nil)).Elem(),
-	"Ljava/lang/String;":  reflect.TypeOf((*string)(nil)).Elem(),
-	"B":                   reflect.TypeOf((*byte)(nil)).Elem(),
-	"J":                   reflect.TypeOf((*int)(nil)).Elem(),
-	"Z":                   reflect.TypeOf((*bool)(nil)).Elem(),
+	"I":                  reflect.TypeOf((*int32)(nil)).Elem(),
+	"Ljava/lang/String;": reflect.TypeOf((*string)(nil)).Elem(),
+	"B":                  reflect.TypeOf((*byte)(nil)).Elem(),
+	"J":                  reflect.TypeOf((*int)(nil)).Elem(),
+	"Z":                  reflect.TypeOf((*bool)(nil)).Elem(),
 	//"F":                   reflect.TypeOf((*float32)(nil)).Elem(),
 	//"D":                   reflect.TypeOf((*float64)(nil)).Elem(),
 }
