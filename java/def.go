@@ -417,7 +417,14 @@ func g12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
 func router(s string, p ...uintptr) uintptr {
 	defer func() {
 		if r := recover(); r != nil {
-			jni.ThrowException(r.(error).Error())
+			if str, b := r.(string); b {
+				jni.ThrowException(str)
+				return
+			}
+			if e, b := r.(error); b {
+				jni.ThrowException(e.Error())
+				return
+			}
 		}
 	}()
 	if f, b := fMappers[s]; b {
