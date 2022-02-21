@@ -1,8 +1,10 @@
-//+build linux android darwin
+//go:build linux || android || darwin
+// +build linux android darwin
 
 package jni
 
 /*
+#cgo CFLAGS: -I ${SRCDIR}/include/
 #cgo linux LDFLAGS: -ldl
 #define _GNU_SOURCE
 #include <dlfcn.h>

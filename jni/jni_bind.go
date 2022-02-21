@@ -1,6 +1,7 @@
 package jni
 
 /*
+#cgo CFLAGS: -I${SRCDIR}/include/
 #include <jni.h>
 #include <stdlib.h>
 

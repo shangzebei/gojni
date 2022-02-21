@@ -84,6 +84,10 @@ func JNI_OnUnload(vm uintptr, reserved uintptr) {
 
 // OnLoad used in golang code but running on other thread
 func OnLoad(f FRegister) {
+	OnMainLoad(f)
+}
+
+func OnAsyncLoad(f FRegister) {
 	onLoads = append(onLoads, f)
 }
 
