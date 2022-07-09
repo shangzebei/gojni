@@ -58,4 +58,25 @@ fmt.Println(vm.RunSource("java.lang.Thread.currentThread[java.lang.Thread()]();"
 ```json
 {{$s=new java.lang.String}}
 ```
+# Android build
+```
+GOOS=android \
+GOARCH=arm64 \
+CC=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android21-clang \
+CXX=$ANDROID_HOME/ndk-bundle/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android21-clang++ \
+CGO_ENABLED=1 \
+go build -buildmode=c-shared -o aaa.so
+```
 
+# IOS build
+```
+GOOS=darwin \
+GOARCH=arm64 \
+CC=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang \
+CXX=/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ \
+CGO_CFLAGS="-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.7.sdk -miphoneos-version-min=7.0 -fembed-bitcode -arch arm64" \
+CGO_CXXFLAGS="-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.7.sdk -miphoneos-version-min=7.0 -fembed-bitcode -arch arm64" \
+CGO_LDFLAGS="-isysroot /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS13.7.sdk -miphoneos-version-min=7.0 -fembed-bitcode -arch arm64" \
+CGO_ENABLED=1 \
+go build -tags ios -v -x -buildmode=c-archive -o aaa.a
+```
