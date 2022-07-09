@@ -10,7 +10,7 @@ import (
 )
 func main() {}
 func init() {
-	java.OnLoad(func(reg java.Register) {
+	java.OnMainLoad(func(reg java.Register) {
 		reg.WithClass("com.nk.Hello").
 			BindNative("nice", "void(java.lang.String[])", nice).
 			Done()
