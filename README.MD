@@ -37,12 +37,8 @@ public class Hello {
 ```
 ### build and run
 ```
-CGO_CFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/linux" go build -buildmode=c-shared -o libtest.so
+go build -buildmode=c-shared -o libtest.so
 LD_LIBRARY_PATH=. java com.nk.Hello
-```
-or
-```shell
-go env -w CGO_CFLAGS="-I$JAVA_HOME/include -I$JAVA_HOME/include/$(go env GOHOSTOS) -g -O2"
 ```
 
 ### 2.native invoke java
@@ -53,10 +49,6 @@ fmt.Println(vm.RunSource("java.lang.Thread.currentThread[java.lang.Thread()]();"
 				AsObject().
 				Invoke("getName", "java.lang.String()").
 				AsString())
-```
-
-```json
-{{$s=new java.lang.String}}
 ```
 # Android build
 ```
