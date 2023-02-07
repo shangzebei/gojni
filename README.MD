@@ -1,4 +1,7 @@
 ## quick start
+```shell
+go get github.com/shangzebei/gojni
+```
 ### 1.java invoke native
 in go 
 ```go
