@@ -1,6 +1,6 @@
 package utils
 
-//jni sig
+// SigEncodeMap jni sig
 var SigEncodeMap = map[string]string{
 	"int":     "I",
 	"boolean": "Z",
@@ -44,13 +44,13 @@ var SigDecodeMap = map[string]string{
 }
 
 /*
-	stop ()V
-	args ([I)V
-	nice ([Ljava/lang/String;)V
-	bb ([B)V
-	llll ([J)V
-	fff ([F)V
-	ddd ([D)V
+stop ()V
+args ([I)V
+nice ([Ljava/lang/String;)V
+bb ([B)V
+llll ([J)V
+fff ([F)V
+ddd ([D)V
 */
 func SigToJavaNative(name string, sig string) {
 

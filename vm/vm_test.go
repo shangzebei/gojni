@@ -2,7 +2,7 @@ package vm
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/native"
+	"github.com/shangzebei/gojni/native"
 	"testing"
 )
 

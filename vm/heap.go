@@ -1,7 +1,7 @@
 package vm
 
 import (
-	"gitee.com/aifuturewell/gojni/jni"
+	"github.com/shangzebei/gojni/jni"
 )
 
 type ojb struct {
@@ -10,7 +10,7 @@ type ojb struct {
 	jObj    jni.Jobject
 }
 
-//heap
+// heap
 type ojbHeap []ojb
 
 func (h *ojbHeap) Swap(i, j int) {

@@ -2,12 +2,12 @@ package native
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/jni"
-	"gitee.com/aifuturewell/gojni/utils"
+	"github.com/shangzebei/gojni/jni"
+	"github.com/shangzebei/gojni/utils"
 	"strings"
 )
 
-//example void()
+// example void()
 func EncodeToSig(oSig string) *MethodSig { //(I)V
 	var retTyp, sig string
 	var paramTyp []Sig

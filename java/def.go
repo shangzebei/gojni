@@ -3,11 +3,11 @@ package java
 import "C"
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/utils"
+	"github.com/shangzebei/gojni/utils"
 	"reflect"
 	"unsafe"
 
-	"gitee.com/aifuturewell/gojni/jni"
+	"github.com/shangzebei/gojni/jni"
 )
 
 //export a2
@@ -82,7 +82,8 @@ func g3(p1, p2, p3 uintptr) uintptr {
 	return router("g3", p1, p2, p3)
 }
 
-//#################################################################
+// #################################################################
+//
 //export a4
 func a4(p1, p2, p3, p4 uintptr) uintptr {
 	return router("a4", p1, p2, p3, p4)
@@ -377,7 +378,8 @@ func g11(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11 uintptr) uintptr {
 	return router("g11", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11)
 }
 
-////////////////////////////////////////////////////////////////////////
+// //////////////////////////////////////////////////////////////////////
+//
 //export a12
 func a12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
 	return router("a12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
@@ -413,7 +415,7 @@ func g12(p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12 uintptr) uintptr {
 	return router("g12", p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12)
 }
 
-//in c type
+// in c type
 func router(s string, p ...uintptr) uintptr {
 	defer func() {
 		if r := recover(); r != nil {

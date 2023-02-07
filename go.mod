@@ -1,4 +1,4 @@
-module gitee.com/aifuturewell/gojni
+module github.com/shangzebei/gojni
 
 go 1.15
 

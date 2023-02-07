@@ -80,13 +80,13 @@ package java
 import "C"
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/native"
+	"github.com/shangzebei/gojni/native"
 	"reflect"
 	"strings"
 	"unsafe"
 
-	"gitee.com/aifuturewell/gojni/jni"
-	"gitee.com/aifuturewell/gojni/utils"
+	"github.com/shangzebei/gojni/jni"
+	"github.com/shangzebei/gojni/utils"
 )
 
 type nativeWarp struct {

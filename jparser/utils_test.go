@@ -2,7 +2,7 @@ package jparser
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/utils"
+	"github.com/shangzebei/gojni/utils"
 	"testing"
 )
 

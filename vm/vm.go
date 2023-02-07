@@ -2,14 +2,14 @@ package vm
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/jparser"
-	"gitee.com/aifuturewell/gojni/native"
-	"gitee.com/aifuturewell/gojni/utils"
+	"github.com/shangzebei/gojni/jparser"
+	"github.com/shangzebei/gojni/native"
+	"github.com/shangzebei/gojni/utils"
 	"log"
 	"reflect"
 	"strings"
 
-	"gitee.com/aifuturewell/gojni/jni"
+	"github.com/shangzebei/gojni/jni"
 )
 
 type VM struct {

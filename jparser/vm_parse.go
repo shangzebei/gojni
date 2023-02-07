@@ -2,9 +2,9 @@ package jparser
 
 import (
 	"fmt"
-	"gitee.com/aifuturewell/gojni/jni"
-	"gitee.com/aifuturewell/gojni/native"
-	"gitee.com/aifuturewell/gojni/utils"
+	"github.com/shangzebei/gojni/jni"
+	"github.com/shangzebei/gojni/native"
+	"github.com/shangzebei/gojni/utils"
 	"regexp"
 	"strconv"
 	"strings"

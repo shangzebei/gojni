@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"strings"
 
-	"gitee.com/aifuturewell/gojni/jni"
+	"github.com/shangzebei/gojni/jni"
 )
 
 var methods = make(map[string]reflect.Method)
@@ -67,7 +67,7 @@ func JabValueToUint(r reflect.Value) uintptr {
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
 		return uintptr(r.Uint())
 	case reflect.Bool:
-		if r.Bool(){
+		if r.Bool() {
 			return jni.JNI_TRUE
 		}
 		return jni.JNI_FALSE
